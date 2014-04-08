@@ -23,7 +23,20 @@ public class ISHandler extends Thread{
 				case Protocol.YOUR_TURN:
 					monitor.choiceNextCard();
 					break;
+				case Protocol.PLAYED_CARD:
+					Card card = new Card(is.read(),is.read());
+					monitor.addNextPlayedCard(card);
+					break;
+				case Protocol.NEW_ROUND:
+					monitor.cleanHand();
+					int nbrOfCards = is.read();
+					for(int i = 0;i < nbrOfCards;i++) {
+						card = new Card(is.read(),is.read());
+						monitor.addCardToHand(card);
+					}
+					break;
 				}
+			
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
