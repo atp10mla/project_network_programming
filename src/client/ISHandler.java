@@ -35,6 +35,17 @@ public class ISHandler extends Thread{
 						monitor.addCardToHand(card);
 					}
 					break;
+				case Protocol.SET_TRUMF:
+					monitor.setTrumf(is.read());
+					break;
+				case Protocol.STICK_WINNER:
+					monitor.addStick(is.read());
+					break;
+				case Protocol.SET_WANTED_STICKS:
+					int player = is.read();
+					monitor.addWantedSticks(player,is.read());
+					break;
+				
 				}
 			
 			}

@@ -1,5 +1,6 @@
 package client;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -19,6 +20,9 @@ public class Monitor {
 	private int nbrOfHearts;
 	private int nbrOfDiamonds;
 	private int nbrOfClubs;
+	
+	ArrayList<Integer> playerStick;
+	ArrayList<Integer> playerWantedSticks;
 	
 	public synchronized int getNextCommando() {
 		while(commandos.size() != 0) {
@@ -92,6 +96,17 @@ public class Monitor {
 
 	public synchronized void cleanHand() {
 		currentHand.clear();		
+	}
+
+	public synchronized void addStick(int player) {
+		playerStick.set(player-1, playerStick.get(player-1)+1);
+		
+	}
+
+	public void addWantedSticks(int player, int sticks) {
+		// TODO Auto-generated method stub
+		playerStick.set(player-1, sticks);
+		
 	}
 	
 }
