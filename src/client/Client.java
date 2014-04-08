@@ -28,6 +28,10 @@ public class Client {
 			System.out.println("Fail to open output/input stream.");
 			System.exit(0);
 		}
+		Monitor monitor = new Monitor();
+		new OSHandler(os, monitor).start();
+		new ISHandler(is, monitor).start();
+		
 		
 		
 	}
