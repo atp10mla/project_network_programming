@@ -99,8 +99,7 @@ public class Monitor {
 	}
 
 	public synchronized void addStick(int player) {
-		playerStick.set(player-1, playerStick.get(player-1)+1);
-		
+		playerStick.set(player-1, playerStick.get(player-1)+1);	
 	}
 
 	public void addWantedSticks(int player, int sticks) {
