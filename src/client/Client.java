@@ -5,11 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-// danne kommenterar :3 #iknoweverything #elitehaxx3r
+// danne kommenterar :3 #iknoweverything #elitehaxx3r <=> SÄMST
 public class Client {	
 	
 	public static void main(String[]args) {
-		Socket socket = null;
+		Socket socket = null; 
 		try {
 			socket = new Socket("localhost", 10000);
 		} catch (UnknownHostException e) {
