@@ -3,16 +3,18 @@ package server;
 import java.io.IOException;
 import java.io.InputStream;
 
+import protocol.Card;
 import protocol.Protocol;
 
 public class InputHandler extends Thread {
-
 	private InputStream is;
 	private Monitor monitor;
+	private Player p;
 
-	public InputHandler(InputStream is, Monitor monitor) {
+	public InputHandler(InputStream is, Monitor monitor, Player p) {
 		this.is = is;
 		this.monitor = monitor;
+		this.p = p;
 	}
 	
 	public void run() {
@@ -26,18 +28,14 @@ public class InputHandler extends Thread {
 			}
 			
 			switch (com) {
-			case Protocol.SEND_CARD: {
-				
-			}
 			case Protocol.GET_DELAY: {
-				
+				monitor.sendCommando(Protocol.SEND_MORE_TIME);
 			}
-			case Protocol.PLAYED_CARD: {
-				monitor.sendCommando(Protocol.SEND_CARD);
+			case Protocol.SEND_CARD: {
+				monitor.sendCommando(Protocol.PLAYED_CARD);
 				int suit = readOneCommand(is);
 				int value = readOneCommand(is);
-				monitor.sendCommando(suit);
-				monitor.sendCommando(value);
+				monitor.sendPlayedCard(new Card(suit, value, p));
 			}
 			case Protocol.SET_TRUMF: {
 				monitor.setTrumf(readOneCommand(is));
@@ -48,11 +46,6 @@ public class InputHandler extends Thread {
 				int wishNbrOfSticks = readOneCommand(is);
 				monitor.sendCommando(playerNbr);
 				monitor.sendCommando(wishNbrOfSticks);
-			}
-			case Protocol.STICK_WINNER: {
-				monitor.sendCommando(Protocol.STICK_WINNER);
-				int playerNbr = readOneCommand(is);
-				monitor.sendCommando(playerNbr);
 			}
 			
 			default: {

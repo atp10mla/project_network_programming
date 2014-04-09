@@ -1,5 +1,7 @@
 package protocol;
 
+import server.Player;
+
 public class Card {
 	public static final int SPADES = 1;
 	public static final int HEARTS = 2;
@@ -13,12 +15,23 @@ public class Card {
 	
 	private int value;
 	private int suit;
+	private Player owner;
 	
+	public Card(int value, int suit, Player owner) {
+		this.value = value;
+		this.suit = suit;
+		this.owner = owner;
+	}
+
 	public Card(int value, int suit) {
 		this.value = value;
 		this.suit = suit;
 	}
-
+	
+	public Player getOwner() {
+		return owner;
+	}
+	
 	public int getValue() {
 		return value;
 	}
