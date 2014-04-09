@@ -1,6 +1,5 @@
 package server;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 public class OutputHandler extends Thread {
@@ -14,14 +13,16 @@ public class OutputHandler extends Thread {
 
 	public void run() {
 		while(true) {
-			try {
-				os.write(monitor.getNextCommando());
-			} catch (IOException e) {
-				System.out.println("Could not write from os");
-				System.exit(1);
-			}
+			//			try {
+
+			monitor.startNewRound();
+			
+			//		} catch (IOException e) {
+			//		System.out.println("Could not write from os");
+			//	System.exit(1);
+			//}
 		}
-		
+
 	}
 
 }
