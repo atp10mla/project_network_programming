@@ -78,6 +78,7 @@ public class OutputHandler extends Thread {
 
 	private void startNewRound() {
 		// send cards for new round
+		monitor.startNewRound();
 		writeCommandAndData(Protocol.NEW_ROUND);
 		int currRound = monitor.getRoundNumber();
 		writeCommandAndData(currRound);

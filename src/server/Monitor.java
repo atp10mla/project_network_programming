@@ -122,20 +122,6 @@ public class Monitor {
 			}
 		}
 		shuffle();
-		for(Player p : party) {
-			try {
-				p.getOs().write(Protocol.NEW_ROUND);
-				for(int i=1;i<currentRound; i++) {
-					p.getOs().write(deck.get(cardPosition).getSuit());
-					p.getOs().write(deck.get(cardPosition).getValue());
-					cardPosition++;
-				}
-				p.getOs().flush();
-			} catch (IOException e) {
-				System.out.println("Player " + p.getName() + " messed up. Throw a shoe on this player.");
-				System.exit(1);
-			}
-		}
 		canStartNewRound = false;
 		notifyAll();
 	}
