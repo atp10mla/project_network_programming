@@ -9,9 +9,9 @@ import java.net.UnknownHostException;
 public class Client {	
 	
 	public static void main(String[]args) {
-		GUI gui = new GUI();
-		gui.show();
-		/*
+		//GUI gui = new GUI();
+		//gui.show();
+		
 		Socket socket = null; 
 		try {
 			socket = new Socket("localhost", 10000);
@@ -36,7 +36,7 @@ public class Client {
 		new ISHandler(is, monitor).start();
 		
 		
-		*/
+		
 	}
 
 }

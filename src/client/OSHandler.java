@@ -21,16 +21,16 @@ public class OSHandler extends Thread{
 				int cmd = monitor.getNextCommando();
 
 				switch(cmd) {
-				case Protocol.SEND_CARD:
+				case Protocol.SEND_CARD: // Send next card.
 					Card card = monitor.getNextCard();
 					os.write(Protocol.SEND_CARD);
 					os.write(card.getSuit());
 					os.write(card.getValue());
-					os.write('\n');
+					
 					break;
 				case Protocol.GET_DELAY:
 					os.write(Protocol.GET_DELAY);
-					os.write('\n');
+					
 					break;
 				}
 
