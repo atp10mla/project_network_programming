@@ -16,6 +16,6 @@ public class Protocol {
 	
 	public static final int SET_WANTED_STICKS = 8; // followed by playerNbr and nbr_of_sticks
 	
-	
+	public static final String ERROR_TIME_OUT = "Time to connect ended\n";
 	
 }
