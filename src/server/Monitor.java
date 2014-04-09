@@ -109,8 +109,10 @@ public class Monitor {
 
 	public synchronized void readyForNewRound() {
 		canStartNewRound = true;
+		notifyAll();
 	}
 
+	// incorrect
 	public synchronized void startNewRound() {
 		while(!canStartNewRound) {
 			try {
@@ -162,5 +164,18 @@ public class Monitor {
 
 	public synchronized Card getNextPlayedCard(Player p) {
 		return playedCards.get(p).pop();
+	}
+
+	public synchronized Player getStickWinner() {
+		
+		return null;
+	}
+
+	public int getNumberOfPlayers() {
+		return party.size();
+	}
+
+	public int getRoundNumber() {
+		return currentRound;
 	}
 }

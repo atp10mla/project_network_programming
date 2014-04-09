@@ -20,7 +20,7 @@ public class Protocol {
 	public static final int NEW_ROUND = 5; // followed by nbr_of_cards, suit_card1, value_card1, suit_card2, value_card2,....
 	
 	// informs player what trumf is current, sends after NEW_ROUND
-	public static final int SET_TRUMF = 6; // followed by suit, value
+	public static final int SET_TRUMF = 6; // followed by suit
 	
 	// informs player whay players won a stick the played stick
 	public static final int STICK_WINNER = 7; // followed by id

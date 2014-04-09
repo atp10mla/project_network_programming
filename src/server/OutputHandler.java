@@ -32,29 +32,24 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.PLAYED_CARD:
 				Card c = monitor.getNextPlayedCard(p);
-				try {
-					os.write(c.getOwner().getId());
-					os.write(c.getSuit());
-					os.write(c.getValue());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				writeCommandAndData(c.getOwner().getId());
+				writeCommandAndData(c.getSuit());
+				writeCommandAndData(c.getValue());
 				break;
 			case Protocol.ROUND_SCORE:
 
 				break;
 			case Protocol.SET_TRUMF:
-
+				writeCommandAndData(Protocol.SET_TRUMF);
+				writeCommandAndData(monitor.getTrumf());
 				break;
 			case Protocol.STICK_WINNER:
-
+				writeCommandAndData(Protocol.STICK_WINNER);
+				writeCommandAndData(monitor.getStickWinner().getId());
 				break;
 			case Protocol.YOUR_TURN:
-
+				writeCommandAndData(Protocol.YOUR_TURN);
 				break;
-
-
-
 			}
 
 
@@ -66,15 +61,30 @@ public class OutputHandler extends Thread {
 
 	}
 
+	private void writeCommandAndData(int data) {
+		try {
+			os.write(data);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void makeNewGame() {
 		// send players
-		// send cards for new round
+		writeCommandAndData(p.getId());
+		writeCommandAndData(monitor.getNumberOfPlayers());
+		startNewRound();
 	}
 
 	private void startNewRound() {
-
+		// send cards for new round
+		writeCommandAndData(Protocol.NEW_ROUND);
+		int currRound = monitor.getRoundNumber();
+		writeCommandAndData(currRound);
+		for(int i=0; i<currRound; i++) {
+			Card newCard = monitor.getNextCard();
+			writeCommandAndData(newCard.getSuit());
+			writeCommandAndData(newCard.getValue());
+		}
 	}
-
-
-
 }
