@@ -41,6 +41,14 @@ public class Monitor {
 	
 
 	public synchronized Card getNextCard() {		
+		while(nextCard == null) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Card card = nextCard;
 		nextCard = null;
 		notifyAll();
@@ -48,7 +56,8 @@ public class Monitor {
 	}
 	
 	public synchronized void choiceNextCard() {		
-		choiceNewCard = true;
+		choiceNewCard = true; 
+		
 		notifyAll();
 	}
 

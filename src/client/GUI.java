@@ -19,10 +19,10 @@ public class GUI extends JFrame{
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout(100,100));
 
-		
+		/*
 		InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("Resources/4_of_clubs.png");
 				try {
-					BufferedImage image = ImageIO.read(in);
+				BufferedImage image = ImageIO.read(in);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -31,6 +31,7 @@ public class GUI extends JFrame{
 		panel.add(null,BorderLayout.CENTER);
 		panel.add(null,BorderLayout.CENTER);
 		panel.add(new JLabel("Example"), BorderLayout.EAST);
+	*/
 	}
 	
 }
