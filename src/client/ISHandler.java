@@ -47,6 +47,13 @@ public class ISHandler extends Thread{
 					player = is.read();
 					monitor.addWantedSticks(player,is.read());
 					break;
+				case Protocol.ROUND_SCORE:
+					int nbrOfPlayers = is.read();
+					for(int i = 0;i<nbrOfPlayers;i++) {
+						monitor.playerScore(i,is.read());
+					}
+					monitor.updateScore();
+					break;
 				
 				}
 			

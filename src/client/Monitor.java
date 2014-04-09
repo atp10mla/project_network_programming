@@ -154,5 +154,16 @@ public class Monitor {
 	public synchronized HashSet<Card> getCurrentHand() {	
 		return currentHand;
 	}
+
+	public synchronized void playerScore(int i, int read) {
+		// TODO Auto-generated method stub
+		
+		// Add score in vector.
+	}
+	public synchronized void updateScore() {
+		guiEvents.addLast(Protocol.ROUND_SCORE);
+		notifyAll();
+	}
+	
 	
 }
