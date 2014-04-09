@@ -25,7 +25,8 @@ public class ISHandler extends Thread{
 					break;
 				case Protocol.PLAYED_CARD:
 					Card card = new Card(is.read(),is.read());
-					monitor.addNextPlayedCard(card);
+					int player = is.read();
+					monitor.addNextPlayedCard(card, player);
 					break;
 				case Protocol.NEW_ROUND:
 					monitor.cleanHand();
@@ -34,15 +35,16 @@ public class ISHandler extends Thread{
 						card = new Card(is.read(),is.read());
 						monitor.addCardToHand(card);
 					}
+					monitor.showCardsOnGUI();
 					break;
 				case Protocol.SET_TRUMF:
-					monitor.setTrumf(is.read());
+					monitor.setTrumf(new Card(is.read(),is.read()));
 					break;
 				case Protocol.STICK_WINNER:
-					monitor.addStick(is.read());
+					monitor.addStick(is.read()); 
 					break;
 				case Protocol.SET_WANTED_STICKS:
-					int player = is.read();
+					player = is.read();
 					monitor.addWantedSticks(player,is.read());
 					break;
 				
