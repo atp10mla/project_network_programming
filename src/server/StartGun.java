@@ -1,13 +1,12 @@
 package server;
 
-public class startGun extends Thread {
+public class StartGun extends Thread {
 	Monitor monitor;
 	
-	public startGun(Monitor m) {
+	public StartGun(Monitor m) {
 		monitor = m;
 	}
-	
-	
+		
 	public void run() {
 		monitor.waitForStart();
 	}

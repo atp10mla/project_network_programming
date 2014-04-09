@@ -29,6 +29,7 @@ public class Server {
 				socket = server.accept();
 				if(firstTime) {
 					timeFirstPlayerConnected = System.currentTimeMillis();
+					new StartGun(monitor).start();
 					firstTime = false;
 				}
 			} catch (IOException e) {
