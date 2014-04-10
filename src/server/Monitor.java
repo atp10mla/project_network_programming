@@ -22,7 +22,7 @@ public class Monitor {
 	private Player stickWinner;
 	//private boolean canStartNewRound = true; 
 	private boolean gameIsRunning = false;
-	
+
 	public Monitor() {
 		for(int i=1; i<14; i++) {
 			for(int j=1; j<5; j++) {
@@ -52,9 +52,9 @@ public class Monitor {
 			commands.get(p).add(Protocol.NEW_ROUND);
 			commands.get(p).add(Protocol.SET_TRUMF);
 		}
-			commands.get(roundStarter).add(Protocol.YOUR_TURN);
-			roundStarter = getPlayerWithId((roundStarter.getId()+1) % party.size());
-			notifyAll();
+		commands.get(roundStarter).add(Protocol.YOUR_TURN);
+		roundStarter = getPlayerWithId((roundStarter.getId()+1) % party.size());
+		notifyAll();
 	}
 
 	public synchronized void waitForStart() {
@@ -69,6 +69,7 @@ public class Monitor {
 		startGame();
 	}
 
+	// main function, really
 	public synchronized void sendPlayedCard(Card card) {
 		for(Player p : party) {
 			//if(p.equals(card.getOwner()))
@@ -96,17 +97,17 @@ public class Monitor {
 		for(Player p : party) {
 			commands.get(p).add(Protocol.ROUND_SCORE);
 		}
-		
+
 		currentRoundCards.clear();
 		globalSticks = 0;
-		
+
 		if(currentRound == 1) {
 			System.out.println("Game is over.");
 			System.exit(0);
 		}
 		currentRound--;
 	}
-	
+
 	public synchronized void getStickWinner() {
 		Card firstCardInRound = currentRoundCards.get(0);
 		Card currentBestCard = firstCardInRound;
