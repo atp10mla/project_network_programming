@@ -19,8 +19,6 @@ public class OutputHandler extends Thread {
 
 	public void run() {
 		while(true) {
-			//			try {
-
 			int cmd = monitor.getNextCommando(p); 
 
 			switch(cmd) {
@@ -29,7 +27,6 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.NEW_ROUND:
 				startNewRound();
-				// måste skicka trumf vid ny runda
 				break;
 			case Protocol.PLAYED_CARD:
 				Card c = monitor.getNextPlayedCard(p);
@@ -38,7 +35,12 @@ public class OutputHandler extends Thread {
 				writeCommandAndData(c.getValue());
 				break;
 			case Protocol.ROUND_SCORE:
-
+				writeCommandAndData(Protocol.ROUND_SCORE);
+				int iter;
+				writeCommandAndData((iter = monitor.getNumberOfPlayers()));
+				for(int id=1; id<=iter; id++) {
+					writeCommandAndData(monitor.getScoreOfPlayer(id));
+				}
 				break;
 			case Protocol.SET_TRUMF:
 				writeCommandAndData(Protocol.SET_TRUMF);
@@ -47,7 +49,7 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.STICK_WINNER:
 				writeCommandAndData(Protocol.STICK_WINNER);
-				writeCommandAndData(monitor.getStickWinner().getId());
+				writeCommandAndData(monitor.returnStickWinner().getId());
 				break;
 			case Protocol.YOUR_TURN:
 				writeCommandAndData(Protocol.YOUR_TURN);
@@ -75,7 +77,6 @@ public class OutputHandler extends Thread {
 
 	private void startNewRound() {
 		// send cards for new round
-		monitor.startNewRound();
 		writeCommandAndData(Protocol.NEW_ROUND);
 		int currRound = monitor.getRoundNumber();
 		writeCommandAndData(currRound);

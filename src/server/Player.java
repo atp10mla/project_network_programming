@@ -7,12 +7,35 @@ public class Player {
 	private String name;
 	private int id;
 	private int score;
+	private int sticks;
+	private int wantedSticks;
 	
 	public Player(OutputStream os, String name, int id) {
 		this.os = os;
 		this.name = name;
 		this.id = id;
 		score = 0;
+	}
+	
+	public void setWantedSticks(int v) {
+		wantedSticks = v;
+	}
+	
+	public void addStick() {
+		sticks++;
+		if(sticks == wantedSticks) {
+			score = wantedSticks*10;
+		}
+		if(score == 0) {
+			score = 5;
+		}
+		if(sticks > wantedSticks || sticks < wantedSticks) {
+			score = 0;
+		}
+	}
+	
+	public int getSticks() {
+		return sticks;
 	}
 	
 	@Override

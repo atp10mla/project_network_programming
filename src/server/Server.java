@@ -39,7 +39,7 @@ public class Server {
 			// If player took more than 2 minutes to connect then he won't be allowed in game
 			if((System.currentTimeMillis()-timeFirstPlayerConnected) < TIME_TO_CONNECT) {
 				try {
-					Player p = new Player(socket.getOutputStream(), "Dummy", currPlayer);
+					Player p = new Player(socket.getOutputStream(), "Dummy", currPlayer++);
 					new InputHandler(socket.getInputStream(), monitor, p).start();
 					new OutputHandler(socket.getOutputStream(), monitor, p).start();
 					monitor.addPlayer(p);

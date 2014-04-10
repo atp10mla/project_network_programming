@@ -64,5 +64,20 @@ public class Card {
 	public int getSuit() {
 		return suit;
 	}
+
+	public boolean moreValuableThan(Card curr, Card trumf, Card first) {
+		if(curr.getSuit() == suit) {
+			return value > curr.getValue();
+		} else if(trumf.getSuit() == suit) {
+			return true;
+		} else if(trumf.getSuit() == curr.getSuit()) {
+			return false;
+		} else if(first.getSuit() == suit) {
+			return true;
+		} else if(first.getSuit() == curr.getSuit()) {
+			return false;
+		}
+		return false;
+	}
 	
 }
