@@ -1,10 +1,12 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Scanner;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import protocol.Card;
 
@@ -22,9 +25,9 @@ public class GUI extends JFrame{
 
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
 
-	private Panel myCards;
-	private Panel middleCards;
-	private Panel trumfPanel;
+	private JPanel myCards;
+	private JPanel middleCards;
+	private JPanel trumfPanel;
 
 
 	private boolean choiceCard = true;
@@ -46,9 +49,8 @@ public class GUI extends JFrame{
 		setTitle("Plump");
 		setSize(1366,768); // default size is 0,0
 		setLayout(new BorderLayout());
-
-/*
-		newGame(2, 3);
+		this.monitor = monitor;
+		newGame(2, 5);
 		addCardToHand(new Card(2,4));
 		addCardToHand(new Card(6,2));
 		addCardToHand(new Card(3,3));
@@ -57,14 +59,15 @@ public class GUI extends JFrame{
 
 		addNextPlayedCard(new Card(3,3),1);
 
-		addNextPlayedCard(new Card(3,3),1);
-
-		setTrumf(new Card(5,2));
-	*/
+		addNextPlayedCard(new Card(3,2),2);
+		
+		choiceNextCard();
+		setTrumf(new Card(5,3));
+	
 		//getContentPane().add(myCards,BorderLayout.NORTH);
 		//panel.add(null,BorderLayout.CENTER);
 		//panel.add(new JLabel("Example"), BorderLayout.EAST);
-
+		
 	}
 
 	public void setTrumf(Card card) {
@@ -119,9 +122,12 @@ public class GUI extends JFrame{
 		ImageIcon icon = createCardOnHand(card);
 
 		JLabel label = new JLabel();
+
 		label.setIcon(icon); 
 		label.addMouseListener(new CardListener(card,label));
+		label.setHorizontalAlignment(JLabel.CENTER);
 		myCards.add(label);
+		
 		getContentPane().add(myCards,BorderLayout.SOUTH);
 
 
@@ -147,8 +153,9 @@ public class GUI extends JFrame{
 		JLabel label = new JLabel();
 		label.setIcon(icon); 
 		middleCards.add(label);
+		label.setHorizontalAlignment(JLabel.CENTER);
+		label.setVerticalAlignment(JLabel.CENTER);
 		getContentPane().add(middleCards,BorderLayout.CENTER);
-
 		revalidate();
 
 
@@ -165,19 +172,22 @@ public class GUI extends JFrame{
 		nbrOfClubs = 0;
 		 */
 		currentHand.clear();
-		myCards = new Panel();
-		myCards.setLayout(new GridLayout(1, 10));
+		myCards.removeAll();
 
 	}
 
 	public void newGame(int id, int nbrOfPlayers) {
-		myCards = new Panel();
-		myCards.setLayout(new GridLayout(1, 10));
-
-		middleCards = new Panel();
-		middleCards.setLayout(new GridLayout(2,3));
-
-		trumfPanel = new Panel();
+		myCards = new JPanel();
+		
+		myCards.setLayout(new FlowLayout());
+		myCards.setAlignmentX(CENTER_ALIGNMENT);
+		
+		middleCards = new JPanel();
+		middleCards.setLayout(new GridBagLayout());
+		middleCards.setAlignmentX(CENTER_ALIGNMENT);
+		middleCards.setAlignmentY(CENTER_ALIGNMENT);
+		
+		trumfPanel = new JPanel();
 		trumfPanel.setLayout(new GridLayout(1,1));
 
 
@@ -260,6 +270,7 @@ public class GUI extends JFrame{
 
 					Thread t = new Thread() {
 						public void run() {
+							
 							monitor.addNextCard(card);
 						}
 					};
