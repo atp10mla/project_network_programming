@@ -52,12 +52,9 @@ public class Monitor {
 			commands.get(p).add(Protocol.NEW_ROUND);
 			commands.get(p).add(Protocol.SET_TRUMF);
 		}
-		if(globalSticks == 0) {
-			commands.get(getPlayerWithId((roundStarter.getId()+1) % party.size())).add(Protocol.YOUR_TURN);
-		} else {
-			commands.get(stickWinner).add(Protocol.YOUR_TURN);
-		}
-		notifyAll();
+			commands.get(roundStarter).add(Protocol.YOUR_TURN);
+			roundStarter = getPlayerWithId((roundStarter.getId()+1) % party.size());
+			notifyAll();
 	}
 
 	public synchronized void waitForStart() {
@@ -94,7 +91,6 @@ public class Monitor {
 		}
 		notifyAll();
 	}
-	
 
 	private synchronized void handleRoundEnd() {
 		for(Player p : party) {
