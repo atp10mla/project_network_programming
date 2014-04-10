@@ -18,18 +18,15 @@ public class GUIWriterThread extends Thread {
 
 		while(true) {
 			int cmd = monitor.getNextGUIEvent();
-
-			switch(cmd) {
-			case Protocol.PLAYED_CARD: //View played card
-				
-				break;
+			
+			/*
 			case Protocol.YOUR_TURN:
 				// Show timer on GUI
-				break;
+				break; 
 			
 				
 			}
-
+*/
 
 		}	
 

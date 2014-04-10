@@ -10,8 +10,11 @@ public class Client {
 	
 	public static void main(String[]args) {
 		GUI gui = new GUI();
-		//gui.show();
+		gui.show();
+		gui.setDefaultCloseOperation(gui.EXIT_ON_CLOSE);
 		
+		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
+		/*
 		Socket socket = null; 
 		try {
 			socket = new Socket("localhost", 10000);
@@ -35,7 +38,7 @@ public class Client {
 		new OSHandler(os, monitor).start();
 		new ISHandler(is, monitor,gui).start();
 		
-		
+		*/
 		
 	}
 

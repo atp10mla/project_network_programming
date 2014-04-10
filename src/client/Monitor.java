@@ -10,14 +10,9 @@ import protocol.Protocol;
 public class Monitor {
 	private LinkedList<Integer> commandos = new LinkedList<Integer>();
 	private LinkedList<Integer> guiEvents = new LinkedList<Integer>();
-	private LinkedList<Integer> stickWinner = new LinkedList<Integer>();
-	private LinkedList<Integer> wantedStick = new LinkedList<Integer>();
 	
 	private Card nextCard;
-	private HashSet<Card> currentTurn = new HashSet<Card>();
-	private int nbrOfPlayers;
 	
-	private int playedSuit;
 	
 	
 	// must initialize
@@ -75,7 +70,7 @@ public class Monitor {
 	}
 
 
-
+/*
 	public synchronized void addNextPlayedCard(Card card, int player) {
 		currentTurn.add(card);
 		// Update gui with card for player... with boolean...
@@ -87,6 +82,7 @@ public class Monitor {
 		}
 		
 	}
+	*/
 
 	/*
 	public synchronized void setTrumf(Card card) {

@@ -29,7 +29,7 @@ public class ISHandler extends Thread{
 				case Protocol.PLAYED_CARD:
 					Card card = new Card(is.read(),is.read());
 					int player = is.read();
-					monitor.addNextPlayedCard(card, player);
+					gui.addNextPlayedCard(card, player);
 					break;
 				case Protocol.NEW_ROUND:
 					gui.cleanHand();
@@ -50,7 +50,7 @@ public class ISHandler extends Thread{
 					//monitor.addStick(is.read()); 
 					break;
 				case Protocol.SET_WANTED_STICKS:
-					
+	
 					gui.setWantedSticks(is.read(),is.read());
 					// set stick to player in GUI.
 					
@@ -58,9 +58,7 @@ public class ISHandler extends Thread{
 					break;
 				case Protocol.ROUND_SCORE:
 					int nbrOfPlayers = is.read();
-					
 					for(int i = 1;i<=nbrOfPlayers;i++) {
-					
 						int score = is.read();
 						// add score for player i
 						
@@ -68,9 +66,12 @@ public class ISHandler extends Thread{
 					}
 					//monitor.updateScore();
 					break;
-					
+				case Protocol.NEW_GAME:
+					int id = is.read();
+					nbrOfPlayers = is.read();
+					gui.newGame(id, nbrOfPlayers);
+					break;
 				}
-			
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
