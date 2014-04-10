@@ -8,6 +8,7 @@ import protocol.Protocol;
 
 public class ISHandler extends Thread{
 
+
 	private InputStream is;
 	private Monitor monitor;
 	private GUI gui;
@@ -31,13 +32,12 @@ public class ISHandler extends Thread{
 					monitor.addNextPlayedCard(card, player);
 					break;
 				case Protocol.NEW_ROUND:
-					monitor.cleanHand();
+					gui.cleanHand();
 					int nbrOfCards = is.read();
 					for(int i = 0;i < nbrOfCards;i++) {
 						card = new Card(is.read(),is.read());
-						monitor.addCardToHand(card);
+						gui.addCardToHand(card);
 					}
-					monitor.showCardsOnGUI();
 					break;
 				case Protocol.SET_TRUMF:				
 					gui.setTrumf(new Card(is.read(),is.read()));

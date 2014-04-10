@@ -16,14 +16,9 @@ public class Monitor {
 	private Card nextCard;
 	private HashSet<Card> currentTurn = new HashSet<Card>();
 	private int nbrOfPlayers;
-	private HashSet<Card> currentHand = new HashSet<Card>();
 	
 	private int playedSuit;
 	
-	private int nbrOfSpades;
-	private int nbrOfHearts;
-	private int nbrOfDiamonds;
-	private int nbrOfClubs;
 	
 	// must initialize
 	ArrayList<Integer> playerStick;
@@ -97,8 +92,9 @@ public class Monitor {
 	public synchronized void setTrumf(Card card) {
 		trumf = card;
 	}
-*/
 
+
+	
 	public synchronized void addCardToHand(Card card) {
 		
 		switch(card.getSuit()) {
@@ -117,7 +113,8 @@ public class Monitor {
 		}
 		currentHand.add(card);
 	}
-
+	*/
+	/*
 	public synchronized void cleanHand() {
 		nbrOfSpades = 0;
 		nbrOfHearts = 0;
@@ -126,13 +123,16 @@ public class Monitor {
 		currentHand.clear();
 		
 	}
+	*/
 
+	/*
 	public synchronized void addStick(int player) {
 		guiEvents.addLast(Protocol.STICK_WINNER);
 		stickWinner.addLast(player);
 		//playerStick.set(player-1, playerStick.get(player-1)+1);
 		notifyAll();
 	}
+	*/
 
 	/* DONT NEED
 	public void addWantedSticks(int player, int sticks) {
@@ -147,15 +147,18 @@ public class Monitor {
 		return stickWinner.pop();
 	}
 */
-	
+	/*
 	public synchronized void showCardsOnGUI() {
 		// TODO Auto-generated method stub
 		guiEvents.addLast(Protocol.NEW_ROUND);
 		notifyAll();
 	}
+	*/
+	/*
 	public synchronized HashSet<Card> getCurrentHand() {	
 		return currentHand;
 	}
+	*/
 
 	/* DONT NEED
 	public synchronized void playerScore(int i, int read) {
