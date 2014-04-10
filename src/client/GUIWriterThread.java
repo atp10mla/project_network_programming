@@ -23,15 +23,6 @@ public class GUIWriterThread extends Thread {
 			case Protocol.PLAYED_CARD: //View played card
 				
 				break;
-			case Protocol.STICK_WINNER:
-				int player = monitor.addStick();
-				// change GUI
-				break;
-			case Protocol.SET_WANTED_STICKS:
-				//Ska hämta nästa spelare och hur många stick den önskar.
-				
-				//
-				break;
 			case Protocol.YOUR_TURN:
 				// Show timer on GUI
 				break;

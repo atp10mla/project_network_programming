@@ -10,9 +10,11 @@ public class ISHandler extends Thread{
 
 	private InputStream is;
 	private Monitor monitor;
-	public ISHandler(InputStream is, Monitor monitor) {
+	private GUI gui;
+	public ISHandler(InputStream is, Monitor monitor, GUI gui) {
 		this.is = is;
 		this.monitor = monitor;
+		this.gui = gui;
 	}
 	
 	public void run() {
@@ -37,24 +39,36 @@ public class ISHandler extends Thread{
 					}
 					monitor.showCardsOnGUI();
 					break;
-				case Protocol.SET_TRUMF:
-					monitor.setTrumf(new Card(is.read(),is.read()));
+				case Protocol.SET_TRUMF:				
+					gui.setTrumf(new Card(is.read(),is.read()));
+					
+					//monitor.setTrumf(new Card(is.read(),is.read()));
 					break;
 				case Protocol.STICK_WINNER:
-					monitor.addStick(is.read()); 
+					gui.addStick(is.read());
+					// +1 stick winner GUI 
+					//monitor.addStick(is.read()); 
 					break;
 				case Protocol.SET_WANTED_STICKS:
-					player = is.read();
-					monitor.addWantedSticks(player,is.read());
+					
+					gui.setWantedSticks(is.read(),is.read());
+					// set stick to player in GUI.
+					
+					//monitor.addWantedSticks(player,is.read());
 					break;
 				case Protocol.ROUND_SCORE:
 					int nbrOfPlayers = is.read();
-					for(int i = 0;i<nbrOfPlayers;i++) {
-						monitor.playerScore(i,is.read());
+					
+					for(int i = 1;i<=nbrOfPlayers;i++) {
+					
+						int score = is.read();
+						// add score for player i
+						
+						//monitor.playerScore(i,is.read());
 					}
-					monitor.updateScore();
+					//monitor.updateScore();
 					break;
-				
+					
 				}
 			
 			}

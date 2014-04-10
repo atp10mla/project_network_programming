@@ -18,7 +18,6 @@ public class Monitor {
 	private int nbrOfPlayers;
 	private HashSet<Card> currentHand = new HashSet<Card>();
 	
-	private Card trumf;
 	private int playedSuit;
 	
 	private int nbrOfSpades;
@@ -94,10 +93,11 @@ public class Monitor {
 		
 	}
 
+	/*
 	public synchronized void setTrumf(Card card) {
 		trumf = card;
 	}
-
+*/
 
 	public synchronized void addCardToHand(Card card) {
 		
@@ -134,6 +134,7 @@ public class Monitor {
 		notifyAll();
 	}
 
+	/* DONT NEED
 	public void addWantedSticks(int player, int sticks) {
 		// TODO Auto-generated method stub
 		guiEvents.addLast(Protocol.SET_WANTED_STICKS);
@@ -145,7 +146,8 @@ public class Monitor {
 	public int addStick() {
 		return stickWinner.pop();
 	}
-
+*/
+	
 	public synchronized void showCardsOnGUI() {
 		// TODO Auto-generated method stub
 		guiEvents.addLast(Protocol.NEW_ROUND);
@@ -155,15 +157,18 @@ public class Monitor {
 		return currentHand;
 	}
 
+	/* DONT NEED
 	public synchronized void playerScore(int i, int read) {
 		// TODO Auto-generated method stub
 		
 		// Add score in vector.
 	}
+	
 	public synchronized void updateScore() {
 		guiEvents.addLast(Protocol.ROUND_SCORE);
 		notifyAll();
 	}
+	*/
 	
 	
 }
