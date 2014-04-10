@@ -18,15 +18,26 @@ public class OSHandler extends Thread{
 	public void run() {
 		try {
 			while(true) {
-				Card card = monitor.getNextCard();
-				os.write(Protocol.SEND_CARD);
-				os.write(card.getSuit());
-				os.write(card.getValue());
+				int cmd = monitor.getNextCommando();
+				switch(cmd) {
+				case Protocol.SEND_CARD: // Send next card.
+					Card card = monitor.getNextCard();
+					os.write(Protocol.SEND_CARD);
+					os.write(card.getSuit());
+					os.write(card.getValue());				
+					break;
+				case Protocol.GET_DELAY:
+					os.write(Protocol.GET_DELAY);
+					break;
+				case Protocol.SET_STICKS:
+					int nbrOfSticks = monitor.getNumberOfSticks();
+					os.write(Protocol.SET_STICKS);
+					os.write(nbrOfSticks);
+					break;
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
-
 	}
-
 }

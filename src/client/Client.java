@@ -38,7 +38,7 @@ public class Client {
 		}
 		Monitor monitor = new Monitor();
 		new OSHandler(os, monitor).start();
-		new ISHandler(is, monitor,gui).start();
+		new ISHandler(is, gui).start();
 		
 		*/
 		

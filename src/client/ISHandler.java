@@ -10,11 +10,9 @@ public class ISHandler extends Thread{
 
 
 	private InputStream is;
-	private Monitor monitor;
 	private GUI gui;
-	public ISHandler(InputStream is, Monitor monitor, GUI gui) {
+	public ISHandler(InputStream is, GUI gui) {
 		this.is = is;
-		this.monitor = monitor;
 		this.gui = gui;
 	}
 	
@@ -61,15 +59,22 @@ public class ISHandler extends Thread{
 					for(int i = 1;i<=nbrOfPlayers;i++) {
 						int score = is.read();
 						// add score for player i
-						
+						gui.setScore(score,i);
 						//monitor.playerScore(i,is.read());
 					}
+					
 					//monitor.updateScore();
 					break;
 				case Protocol.NEW_GAME:
 					int id = is.read();
 					nbrOfPlayers = is.read();
 					gui.newGame(id, nbrOfPlayers);
+					break;
+				
+				case Protocol.SET_STICKS:
+					// Also start timer...
+					gui.setSticks();
+					
 					break;
 				}
 			}

@@ -8,10 +8,26 @@ import protocol.Card;
 import protocol.Protocol;
 
 public class Monitor {
+	private LinkedList<Integer> commandos = new LinkedList<Integer>();
 	
-	private Card nextCard;	
+	private Card nextCard;
+	private int nbrOfSticks;
+	
+	
+	
+	public synchronized int getNextCommando() {
+		while(commandos.size() != 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
 
-		
+				e.printStackTrace();
+			}
+		}
+		int cmd = commandos.pop();
+		notifyAll();
+		return cmd;
+	}
 	
 
 	public synchronized Card getNextCard() {		
@@ -33,6 +49,19 @@ public class Monitor {
 		nextCard = card;
 		notifyAll();
 	}
+
+	public synchronized int getNumberOfSticks() {
+		// TODO Auto-generated method stub
+		commandos.poll();
+		return nbrOfSticks;
+	}
+	public synchronized void addNumberOfSticks(int nbrOfSticks) {
+		// TODO Auto-generated method stub
+		this.nbrOfSticks = nbrOfSticks;
+		commandos.addLast(Protocol.SET_STICKS);
+		
+	}
+	
 	
 
 

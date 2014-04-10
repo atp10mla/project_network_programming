@@ -7,31 +7,30 @@ import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import protocol.Card;
 
 public class GUI extends JFrame{
+	
+	private static final long serialVersionUID = 1L;
+
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
 
 	private Panel myCards;
+	private Panel middleCards;
+	private Panel trumfPanel;
+	
 	
 	private boolean choiceCard = true;
 	
 	private Monitor monitor;
 	
 	private int nbrOfPlayers;
-
-	private int nbrOfSpades;
-	private int nbrOfHearts;
-	private int nbrOfDiamonds;
-	private int nbrOfClubs;
 
 	private int myId;
 
@@ -40,20 +39,26 @@ public class GUI extends JFrame{
 	private int nbrOfPlayedCards;
 
 	private Card trumf;
+
+	private int totalSticks;
 	public GUI(Monitor monitor) {
 		setTitle("Plump");
 		setSize(1366,768); // default size is 0,0
+		setLayout(new BorderLayout());
 		
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout(1366,768));
-
 		
-		myCards = new Panel();
-		myCards.setLayout(new GridLayout(1, 10));
 		newGame(2, 3);
 		addCardToHand(new Card(2,4));
 		addCardToHand(new Card(6,2));
 		addCardToHand(new Card(3,3));
+		addNextPlayedCard(new Card(3,3),2);
+		addNextPlayedCard(new Card(3,3),2);
+		
+		addNextPlayedCard(new Card(3,3),1);
+		
+		addNextPlayedCard(new Card(3,3),1);
+		
+		setTrumf(new Card(5,2));
 		//getContentPane().add(myCards,BorderLayout.NORTH);
 		//panel.add(null,BorderLayout.CENTER);
 		//panel.add(new JLabel("Example"), BorderLayout.EAST);
@@ -62,19 +67,36 @@ public class GUI extends JFrame{
 
 	public void setTrumf(Card card) {
 		this.trumf = card;
+		
+		// change to create trumf card
+		ImageIcon icon = createTrumfCard(card);
+		
+		JLabel label = new JLabel();
+		label.setIcon(icon); 
+		trumfPanel.add(label);
+		getContentPane().add(trumfPanel,BorderLayout.WEST);
+
+		revalidate();
+
+
+		System.out.println("Trumf is: "+card.getSuit());
 		// update GUI with Card.
 	}
 	public void addStick(int playerId) {
-
+		System.out.println("Player: "+playerId+" get one stick");
+		totalSticks = 0;
 		// update GUI . +1 for player
 	}
 
 	public void setWantedSticks(int playerId, int sticks) {
+		totalSticks += sticks;
+		System.out.println("Player: "+playerId+" wants: "+sticks);
 
 		// update GUI . with wanted sticks for player.
 
 	}
 	public void addCardToHand(Card card) {
+		/*
 		switch(card.getSuit()) {
 		case Card.CLUBS:
 			nbrOfClubs++;
@@ -89,6 +111,7 @@ public class GUI extends JFrame{
 			nbrOfSpades++;
 			break;
 		}
+		*/
 		currentHand.add(card);
 		
 		ImageIcon icon = createCardOnHand(card);
@@ -109,23 +132,36 @@ public class GUI extends JFrame{
 		if(nbrOfPlayedCards == nbrOfPlayers) {
 			// TODO
 			//gui clear all cards on the table.
+			middleCards.removeAll();
+			
 			nbrOfPlayedCards = 0;
 			playedSuit = card.getSuit();
 		} 
 		nbrOfPlayedCards++;
 
 		
-		// add to card in middle player.. 
+		ImageIcon icon = createCardInMiddle(card);
+		
+		JLabel label = new JLabel();
+		label.setIcon(icon); 
+		middleCards.add(label);
+		getContentPane().add(middleCards,BorderLayout.CENTER);
+
+		revalidate();
+		
+		
+		// add to card in middle, player.. 
 
 
 	}
 
 	public void cleanHand() {
-
+/*
 		nbrOfSpades = 0;
 		nbrOfHearts = 0;
 		nbrOfDiamonds = 0;
 		nbrOfClubs = 0;
+	*/
 		currentHand.clear();
 		myCards = new Panel();
 		myCards.setLayout(new GridLayout(1, 10));
@@ -133,6 +169,16 @@ public class GUI extends JFrame{
 	}
 
 	public void newGame(int id, int nbrOfPlayers) {
+		myCards = new Panel();
+		myCards.setLayout(new GridLayout(1, 10));
+		
+		middleCards = new Panel();
+		middleCards.setLayout(new GridLayout(2,3));
+		
+		trumfPanel = new Panel();
+		trumfPanel.setLayout(new GridLayout(1,1));
+		
+		
 		myId = id;
 		this.nbrOfPlayers = nbrOfPlayers;
 		nbrOfPlayedCards = nbrOfPlayers;
@@ -140,8 +186,7 @@ public class GUI extends JFrame{
 
 		// TODO Auto-generated method stub
 	}
-
-	private ImageIcon createCardOnHand(Card card) {
+	private String parseCardToPngString(Card card) {
 		String path = "";
 		switch (card.getValue()) {
 		case Card.JACK:
@@ -173,9 +218,19 @@ public class GUI extends JFrame{
 			path+="spades.png";
 			break;
 		}
-		
-		return createImageIcon(path, 83,121);
-		
+		return path;
+	}
+
+	private ImageIcon createCardOnHand(Card card) {			
+		return createImageIcon(parseCardToPngString(card), 83,121);
+	}
+	
+	private ImageIcon createCardInMiddle(Card card) {			
+		return createImageIcon(parseCardToPngString(card), 83,121);
+	}
+	
+	private ImageIcon createTrumfCard(Card card) {			
+		return createImageIcon(parseCardToPngString(card), 40,60);
 	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
@@ -200,12 +255,13 @@ public class GUI extends JFrame{
 			// Check if ok to send card.
 			if(choiceCard) {
 				if(nbrOfPlayedCards==nbrOfPlayers || card.getSuit()== playedSuit) {
-					monitor.addNextCard(card);
+					// Skapa en tråd som gör följande
+						//monitor.addNextCard(card);
 					currentHand.remove(card);
 					myCards.remove(comp);
-
-					getContentPane().add(myCards,BorderLayout.SOUTH);
-
+					addNextPlayedCard(card, 1);
+					
+					revalidate();
 					// send card and delete from view...
 					choiceCard = false;
 				} else {
@@ -228,7 +284,7 @@ public class GUI extends JFrame{
 							currentHand.remove(card);
 							myCards.remove(comp);
 							// send card and delete from view...
-							getContentPane().add(myCards,BorderLayout.SOUTH);
+							revalidate();
 							choiceCard = false;
 									
 						}
@@ -250,8 +306,22 @@ public class GUI extends JFrame{
 		}
 	}
 	public void choiceNextCard() {
+		System.out.println("Välj nästa kort!");
 		choiceCard = true;
 		// start timer here and put text.
+	}
+
+	public void setSticks() {
+		// Ask for sticks and send to monitor with Thread...
+		// monitor.
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setScore(int score, int playerId) {
+		// TODO Auto-generated method stub
+		System.out.println("Player: "+playerId+" . Score: "+score);
+		
 	}
 	
 }
