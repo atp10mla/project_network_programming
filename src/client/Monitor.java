@@ -8,45 +8,10 @@ import protocol.Card;
 import protocol.Protocol;
 
 public class Monitor {
-	private LinkedList<Integer> commandos = new LinkedList<Integer>();
-	private LinkedList<Integer> guiEvents = new LinkedList<Integer>();
 	
-	private Card nextCard;
-	
-	
-	
-	// must initialize
-	ArrayList<Integer> playerStick;
-	ArrayList<Integer> playerWantedSticks;
-	
-	public synchronized int getNextCommando() {
-		while(commandos.size() != 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
+	private Card nextCard;	
 
-				e.printStackTrace();
-			}
-		}
-		int cmd = commandos.pop();
-		notifyAll();
-		return cmd;
-	}
-	
-	public synchronized int getNextGUIEvent() {
-		while(guiEvents.size() != 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-		}
-		int cmd = commandos.pop();
-		notifyAll();
-		return cmd;
-	}
-	
+		
 	
 
 	public synchronized Card getNextCard() {		
@@ -64,10 +29,11 @@ public class Monitor {
 		return card;
 	}
 	
-	public synchronized void choiceNextCard() {		
-		guiEvents.addLast(Protocol.YOUR_TURN);
+	public synchronized void addNextCard(Card card) {
+		nextCard = card;
 		notifyAll();
 	}
+	
 
 
 /*

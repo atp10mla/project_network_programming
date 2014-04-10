@@ -24,7 +24,7 @@ public class ISHandler extends Thread{
 				int cmd = is.read();
 				switch(cmd) {
 				case Protocol.YOUR_TURN:
-					monitor.choiceNextCard();
+					gui.choiceNextCard();
 					break;
 				case Protocol.PLAYED_CARD:
 					Card card = new Card(is.read(),is.read());

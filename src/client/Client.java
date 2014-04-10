@@ -9,7 +9,9 @@ import java.net.UnknownHostException;
 public class Client {	
 	
 	public static void main(String[]args) {
-		GUI gui = new GUI();
+		Monitor monitor = new Monitor();
+		
+		GUI gui = new GUI(monitor);
 		gui.show();
 		gui.setDefaultCloseOperation(gui.EXIT_ON_CLOSE);
 		

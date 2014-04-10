@@ -24,6 +24,8 @@ public class GUI extends JFrame{
 	
 	private boolean choiceCard = true;
 	
+	private Monitor monitor;
+	
 	private int nbrOfPlayers;
 
 	private int nbrOfSpades;
@@ -38,7 +40,7 @@ public class GUI extends JFrame{
 	private int nbrOfPlayedCards;
 
 	private Card trumf;
-	public GUI() {
+	public GUI(Monitor monitor) {
 		setTitle("Plump");
 		setSize(1366,768); // default size is 0,0
 		
@@ -91,8 +93,6 @@ public class GUI extends JFrame{
 		
 		ImageIcon icon = createCardOnHand(card);
 		
-		//icon.
-		
 		JLabel label = new JLabel();
 		label.setIcon(icon); 
 		label.addMouseListener(new CardListener(card,label));
@@ -100,7 +100,6 @@ public class GUI extends JFrame{
 		getContentPane().add(myCards,BorderLayout.SOUTH);
 
 		
-		// Update GUI with new card...
 	}
 
 
@@ -201,9 +200,10 @@ public class GUI extends JFrame{
 			// Check if ok to send card.
 			if(choiceCard) {
 				if(nbrOfPlayedCards==nbrOfPlayers || card.getSuit()== playedSuit) {
+					monitor.addNextCard(card);
 					currentHand.remove(card);
 					myCards.remove(comp);
-					System.out.println("get here!");
+
 					getContentPane().add(myCards,BorderLayout.SOUTH);
 
 					// send card and delete from view...
@@ -224,15 +224,16 @@ public class GUI extends JFrame{
 						} else if(hasTrumf && card.getSuit() != trumf.getSuit()) {
 							return;
 						} else {
+							monitor.addNextCard(card);
 							currentHand.remove(card);
 							myCards.remove(comp);
 							// send card and delete from view...
+							getContentPane().add(myCards,BorderLayout.SOUTH);
 							choiceCard = false;
 									
 						}
 					}
 				}
-				System.out.println(card);
 			}
 		}
 		@Override
@@ -248,4 +249,9 @@ public class GUI extends JFrame{
 		public void mouseReleased(MouseEvent e) {
 		}
 	}
+	public void choiceNextCard() {
+		choiceCard = true;
+		// start timer here and put text.
+	}
+	
 }
