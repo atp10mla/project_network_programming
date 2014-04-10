@@ -194,4 +194,7 @@ public class Monitor {
 	public synchronized Card getNextCard() {
 		return deck.get(cardPosition++);
 	}
+	public void setWantedSticks(int nbrOfSticks, Player p) {
+		p.setWantedSticks(nbrOfSticks);
+	}
 }

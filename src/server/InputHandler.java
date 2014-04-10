@@ -44,7 +44,9 @@ public class InputHandler extends Thread {
 				monitor.sendCommando(playerNbr);
 				monitor.sendCommando(wishNbrOfSticks);
 			}
-			
+			case Protocol.SET_STICKS:
+				monitor.setWantedSticks(readOneCommand(is), p);
+				break;
 			default: {
 				// some error
 			}
