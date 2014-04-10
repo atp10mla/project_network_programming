@@ -24,16 +24,13 @@ public class Monitor {
 	private boolean gameIsRunning = false;
 
 	public Monitor() {
-		for(int i=1; i<14; i++) {
-			for(int j=1; j<5; j++) {
+		for(int i=1; i<14; i++)
+			for(int j=1; j<5; j++)
 				deck.add(new Card(i,j));
-			}
-		}
 		shuffle();
 	}
 
 	// handle order of players
-
 	public int getNextCommando(Player p) {
 		while(commands.get(p.getId()).isEmpty()) {
 			try {
@@ -53,6 +50,7 @@ public class Monitor {
 			commands.get(p).add(Protocol.SET_TRUMF);
 		}
 		commands.get(roundStarter).add(Protocol.YOUR_TURN);
+		stickStarter = stickWinner;
 		roundStarter = getPlayerWithId((roundStarter.getId()+1) % party.size());
 		notifyAll();
 	}
@@ -82,7 +80,7 @@ public class Monitor {
 			getStickWinner();
 			globalSticks++;
 		} else {
-			stickStarter = getPlayerWithId(stickStarter.getId()+1);
+			stickStarter = getPlayerWithId((stickStarter.getId()+1) % party.size());
 		}
 //		stickWinner.addStick();
 		globalSticks++;
@@ -97,7 +95,6 @@ public class Monitor {
 		for(Player p : party) {
 			commands.get(p).add(Protocol.ROUND_SCORE);
 		}
-
 		currentRoundCards.clear();
 		globalSticks = 0;
 
