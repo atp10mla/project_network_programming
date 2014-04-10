@@ -1,6 +1,5 @@
 package server;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,14 +43,8 @@ public class Monitor {
 	}
 
 	public synchronized void sendCommando(int com) {
-		try {
-			for(Player p : party) {
-				p.getOs().write(com);
-				p.getOs().flush();
-			}
-		} catch (IOException e) {
-			System.out.println("Could not send from monitor");
-			System.exit(1);
+		for(Player p : party) {
+			commands.get(p).add(com);
 		}
 	}
 
@@ -74,6 +67,9 @@ public class Monitor {
 
 	public synchronized void setTrumf(int suit) {
 		trumf = suit;
+		for(Player p : party) {
+			commands.get(p).add(Protocol.SET_TRUMF);
+		}
 	}
 
 	public int getTrumf() {
