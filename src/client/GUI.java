@@ -11,7 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import protocol.Card;
+
 public class GUI extends JFrame{
+	private Card trumf;
 	public GUI() {
 		setTitle("Plump");
 		setSize(300,200); // default size is 0,0
@@ -32,6 +35,21 @@ public class GUI extends JFrame{
 		panel.add(null,BorderLayout.CENTER);
 		panel.add(new JLabel("Example"), BorderLayout.EAST);
 	*/
+	}
+	
+	public void setTrumf(Card card) {
+		this.trumf = card;
+		// update GUI with Card.
+	}
+	public void addStick(int playerId) {
+		
+		// update GUI . +1 for player
+	}
+
+	public void setWantedSticks(int playerId, int sticks) {
+
+		// update GUI . with wanted sticks for player.
+		
 	}
 	
 }
