@@ -26,14 +26,6 @@ public class GUIWriterThread extends Thread {
 			case Protocol.YOUR_TURN:
 				// Show timer on GUI
 				break;
-			case Protocol.NEW_ROUND:
-				// set all sticks to 0 in GUI
-				// show players card
-				HashSet<Card> cards = monitor.getCurrentHand();
-				for(Card card:cards) {
-					// show card on GUI..
-				}
-				break;
 			
 				
 			}
