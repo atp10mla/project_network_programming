@@ -80,12 +80,12 @@ public class Monitor {
 		currentRoundCards.add(card);
 		if(currentRoundCards.size() == party.size()) {
 			getStickWinner();
-			commands.get(stickWinner).add(Protocol.YOUR_TURN);
+			globalSticks++;
 		} else {
-			commands.get(stickStarter).add(Protocol.YOUR_TURN);
+			stickStarter = getPlayerWithId(stickStarter.getId()+1);
 		}
+//		stickWinner.addStick();
 		globalSticks++;
-		stickWinner.addStick();
 		if(globalSticks == currentRound) {
 			handleRoundEnd();
 			startNewRound();
@@ -123,6 +123,7 @@ public class Monitor {
 			commands.get(p).add(Protocol.STICK_WINNER);
 		}
 		stickStarter = stickWinner;
+		stickWinner.addStick();
 	}
 
 	private Player getPlayerWithId(int i) {
