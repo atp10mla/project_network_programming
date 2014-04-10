@@ -13,7 +13,7 @@ public class Monitor {
 	HashMap<Player, LinkedList<Card> > playedCards = new HashMap<Player, LinkedList<Card> >();
 	ArrayList<Player> party = new ArrayList<Player>();
 	ArrayList<Card> deck = new ArrayList<Card>();
-	private int trumf;
+	private Card trumf;
 	private Player roundStarter, stickStarter;
 	private int cardPosition = 0;
 	private int currentRound = 10;
@@ -65,14 +65,14 @@ public class Monitor {
 		party.remove(p);
 	}
 
-	public synchronized void setTrumf(int suit) {
+	public synchronized void setTrumf(Card suit) {
 		trumf = suit;
 		for(Player p : party) {
 			commands.get(p).add(Protocol.SET_TRUMF);
 		}
 	}
 
-	public int getTrumf() {
+	public Card getTrumf() {
 		return trumf;
 	}
 
@@ -118,7 +118,11 @@ public class Monitor {
 			}
 		}
 		shuffle();
+		trumf = getNextCard();
 		canStartNewRound = false;
+		for(Player p : party) {
+			commands.get(p).add(Protocol.SET_TRUMF);
+		}
 		notifyAll();
 	}
 

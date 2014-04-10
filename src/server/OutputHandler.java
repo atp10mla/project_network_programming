@@ -42,7 +42,8 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.SET_TRUMF:
 				writeCommandAndData(Protocol.SET_TRUMF);
-				writeCommandAndData(monitor.getTrumf());
+				writeCommandAndData(monitor.getTrumf().getSuit());
+				writeCommandAndData(monitor.getTrumf().getValue());
 				break;
 			case Protocol.STICK_WINNER:
 				writeCommandAndData(Protocol.STICK_WINNER);
@@ -53,11 +54,6 @@ public class OutputHandler extends Thread {
 				break;
 			}
 
-
-			//		} catch (IOException e) {
-			//		System.out.println("Could not write from os");
-			//	System.exit(1);
-			//}
 		}
 
 	}

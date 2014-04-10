@@ -37,9 +37,6 @@ public class InputHandler extends Thread {
 				int value = readOneCommand(is);
 				monitor.sendPlayedCard(new Card(suit, value, p));
 			}
-			case Protocol.SET_TRUMF: {
-				monitor.setTrumf(readOneCommand(is));
-			}
 			case Protocol.SET_WANTED_STICKS: {
 				monitor.sendCommando(Protocol.SET_WANTED_STICKS);
 				int playerNbr = readOneCommand(is);
