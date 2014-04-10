@@ -8,50 +8,10 @@ import protocol.Card;
 import protocol.Protocol;
 
 public class Monitor {
-	private LinkedList<Integer> commandos = new LinkedList<Integer>();
-	private LinkedList<Integer> guiEvents = new LinkedList<Integer>();
-	private LinkedList<Integer> stickWinner = new LinkedList<Integer>();
-	private LinkedList<Integer> wantedStick = new LinkedList<Integer>();
 	
-	private Card nextCard;
-	private HashSet<Card> currentTurn = new HashSet<Card>();
-	private int nbrOfPlayers;
-	
-	private int playedSuit;
-	
-	
-	// must initialize
-	ArrayList<Integer> playerStick;
-	ArrayList<Integer> playerWantedSticks;
-	
-	public synchronized int getNextCommando() {
-		while(commandos.size() != 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
+	private Card nextCard;	
 
-				e.printStackTrace();
-			}
-		}
-		int cmd = commandos.pop();
-		notifyAll();
-		return cmd;
-	}
-	
-	public synchronized int getNextGUIEvent() {
-		while(guiEvents.size() != 0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-		}
-		int cmd = commandos.pop();
-		notifyAll();
-		return cmd;
-	}
-	
+		
 	
 
 	public synchronized Card getNextCard() {		
@@ -69,13 +29,14 @@ public class Monitor {
 		return card;
 	}
 	
-	public synchronized void choiceNextCard() {		
-		guiEvents.addLast(Protocol.YOUR_TURN);
+	public synchronized void addNextCard(Card card) {
+		nextCard = card;
 		notifyAll();
 	}
+	
 
 
-
+/*
 	public synchronized void addNextPlayedCard(Card card, int player) {
 		currentTurn.add(card);
 		// Update gui with card for player... with boolean...
@@ -87,6 +48,7 @@ public class Monitor {
 		}
 		
 	}
+	*/
 
 	/*
 	public synchronized void setTrumf(Card card) {
