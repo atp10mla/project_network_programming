@@ -29,6 +29,7 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.NEW_ROUND:
 				startNewRound();
+				// måste skicka trumf vid ny runda
 				break;
 			case Protocol.PLAYED_CARD:
 				Card c = monitor.getNextPlayedCard(p);
