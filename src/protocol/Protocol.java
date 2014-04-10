@@ -31,9 +31,10 @@ public class Protocol {
 	// informs player how much score each player got this round
 	public static final int ROUND_SCORE = 9; // followed by number of players, score, score...
 	
-	public static final String ERROR_TIME_OUT = "Time to connect ended\n";
-	
 	// inform server/ask player what number of stick the person wants
 	public static final int SET_STICKS = 10; // followed by nbr_of_sticks / nothing when server ask..
+	
+	public static final String ERROR_TIME_OUT = "Time to connect ended\n";
+	
 		
 }
