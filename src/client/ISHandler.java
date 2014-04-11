@@ -70,10 +70,7 @@ public class ISHandler extends Thread{
 					break;
 				}
 			}
-		} catch (IOException e) {
-			
+		} catch (IOException e) {		
 		}
-	
 	}
-	
 }

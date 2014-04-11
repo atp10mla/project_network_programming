@@ -24,44 +24,49 @@ public class GUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
+	// Current cards on hand
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
 
+	// Message element (wait for next player, set sticks...)
 	private JLabel textMessage = new JLabel();
 
+	// True if your turn to set sticks.
 	private boolean setSticks = false;
 
+	// Vector with JLabels with sticks taken this round for each player.
 	private JLabel takenSticks[];
 
+	// Hard coded nbr of rounds. shift to set by server.
 	private int nbrOfRounds = 3;
-	private int sticksInRound = nbrOfRounds;
+	private int sticksInRound = nbrOfRounds + 1;
 
-	private JPanel panelTakenSticks;
 
+	// JPanels
 	private JPanel myCards;
 	private JPanel middleCards;
 	private JPanel trumfPanel;
 
-	private JPanel panelScoreBoard;
-
-
+	// Score board
 	private JLabel[][] scoreBoard;
 
+	// True if it is your turn to choice a card.
 	private boolean choiceCard = false;
 
+	// The monitor
 	private Monitor monitor;
-
 	private int nbrOfPlayers;
 
-	private int myId;
-
+	// First played card has suit.
 	private int playedSuit;
 
+	// Nbr of played cards in a stick
 	private int nbrOfPlayedCards;
 
+	// Trumf card for the round
 	private Card trumf;
-
 	private int roundNbr;
 
+	// For stick selection
 	private JSpinner spinner;
 	private JButton sendSticks;
 
@@ -70,6 +75,11 @@ public class GUI extends JFrame{
 	private int totalSticks;
 
 	private int dir = -1;
+
+	/**
+	 * 
+	 * @param monitor
+	 */
 	public GUI(Monitor monitor) {
 		setTitle("Plump");
 		setSize(1366,768); // default size is 0,0
@@ -99,6 +109,10 @@ public class GUI extends JFrame{
 
 	}
 
+	/**
+	 * Set the trumf card for the current round.
+	 * @param card The trumf card
+	 */
 	public void setTrumf(Card card) {
 		this.trumf = card;
 		trumfPanel.removeAll();
@@ -106,31 +120,41 @@ public class GUI extends JFrame{
 		JLabel label = new JLabel();
 		label.setIcon(icon); 
 		trumfPanel.add(label);
+		// Dont know if i need this row...
 		getContentPane().add(trumfPanel,BorderLayout.WEST);
 		revalidate();
 	}
+
+	/**
+	 * Add one to the stick winner.
+	 * @param playerId id of stick winner.
+	 */
 	public void addStick(int playerId) {
 		System.out.println("Player: "+playerId+" get one stick");
-
 		takenSticks[playerId-1].setText(""+(Integer.parseInt(takenSticks[playerId-1].getText())+1));
 		middleCards.removeAll();
 		revalidate();
 		// update GUI . +1 for player
 	}
 
+	/**
+	 * Set wanted sticks for a player.
+	 * @param playerId The player
+	 * @param sticks Number of sticks
+	 */
 	public void setWantedSticks(int playerId, int sticks) {
 		totalSticks += sticks;
 		playersSetSticks++;
 		System.out.println("Player: "+playerId+" wants: "+sticks);
-
 		scoreBoard[roundNbr][playerId].setText(sticks+"");
 		revalidate();
-		// update GUI . with wanted sticks for player.
-
 	}
-	public void addCardToHand(Card card) {
 
-		//System.out.println("Suit: "+ card.getSuit()+" Value: "+card.getValue() );
+	/**
+	 * Add a card to the hand.
+	 * @param card The card
+	 */
+	public void addCardToHand(Card card) {
 		currentHand.add(card);
 
 		ImageIcon icon = createCardOnHand(card);
@@ -140,7 +164,6 @@ public class GUI extends JFrame{
 		label.addMouseListener(new CardListener(card,label));
 		label.setHorizontalAlignment(JLabel.CENTER);
 		myCards.add(label);
-
 
 		/*
 		currentHand.add(card);
@@ -159,60 +182,130 @@ public class GUI extends JFrame{
 	}
 
 
+	/**
+	 * Add next played card in the middle
+	 * @param card The card
+	 * @param player The player who played the card.
+	 */
 	public void addNextPlayedCard(Card card, int player) {
-		//currentTurn.add(card);
-		// Update gui with card for player... with boolean...
-		if(nbrOfPlayedCards == nbrOfPlayers) {
-			// TODO
-			//gui clear all cards on the table.
-			middleCards.removeAll();
 
+		if(nbrOfPlayedCards == nbrOfPlayers) {
+			middleCards.removeAll();
 			nbrOfPlayedCards = 0;
 			playedSuit = card.getSuit();
 		} 
 		nbrOfPlayedCards++;
-
-
 		ImageIcon icon = createCardInMiddle(card);
-
 		JLabel label = new JLabel();
 		label.setIcon(icon); 
 		middleCards.add(label);
 		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setVerticalAlignment(JLabel.CENTER);
+		// Need this?? TODO
 		getContentPane().add(middleCards,BorderLayout.CENTER);
 		revalidate();
-
-
-		// add to card in middle, player.. 
-
-
 	}
 
+	/**
+	 * Clean the hand. New round starts.
+	 */
 	public void cleanHand() {
-		/*
-		nbrOfSpades = 0;
-		nbrOfHearts = 0;
-		nbrOfDiamonds = 0;
-		nbrOfClubs = 0;
-		 */
+		
+		if(dir == -1) {
+			if(sticksInRound != 1) {
+				sticksInRound--;
+			} else {
+				dir = 1;
+			}
+		} else {
+			sticksInRound++;
+		}
 		
 		totalSticks = 0;
 		playersSetSticks = 0;
 		for(int i = 0;i<takenSticks.length;i++) {
 			takenSticks[i].setText("0");
 		}
-
 		roundNbr++;
 		currentHand.clear();
 		myCards.removeAll();
 		revalidate();
+	}
+
+	/**
+	 * Start a new game with a given number of players.
+	 * @param id The id you have.
+	 * @param nbrOfPlayers Number of players
+	 */
+	public void newGame(int id, final int nbrOfPlayers) {
+		this.nbrOfPlayers = nbrOfPlayers;
+		createScoreBoard(id);
+		createStickPanel();
+		roundNbr = 0;
+		myCards = new JPanel();
+		myCards.setLayout(new GridLayout(1,nbrOfRounds));
+		middleCards = new JPanel();
+		middleCards.setLayout(new GridBagLayout());
+		middleCards.setAlignmentX(CENTER_ALIGNMENT);
+		middleCards.setAlignmentY(CENTER_ALIGNMENT);
+		trumfPanel = new JPanel();
+		nbrOfPlayedCards = nbrOfPlayers;
+		revalidate();
+	}
+	private void createStickPanel() {
+		JPanel sticks = new JPanel();
+		sendSticks = new JButton("Send sticks");
+		sendSticks.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if(setSticks) {
+					if(playersSetSticks == nbrOfPlayers-1 && (int)spinner.getValue() + totalSticks == sticksInRound) {
+						textMessage.setText("Total sticks +  your sticks = total sticks in the round. Error");
+						revalidate();
+						return;
+					}
+					Thread t = new Thread() {
+						public void run() {
+							setSticks = false;
+							System.out.println("count: "+ spinner.getValue());
+							monitor.addNumberOfSticks((int)spinner.getValue());
+							textMessage.setText("Wait for other players...");
+							revalidate();
+						}
+					};
+					t.start();		
+				}
+			}
+		});
+		spinner = new JSpinner( new SpinnerNumberModel( 1,0,nbrOfRounds,1 ) );
+		sticks.add(spinner);
+		sticks.add(sendSticks);
+		sticks.add(textMessage);
+		JPanel panelTakenSticks = new JPanel();
+		panelTakenSticks.setLayout(new BorderLayout(2,3));
+
+		takenSticks = new JLabel[nbrOfPlayers];
+		for(int j=0;j<2;j++) {
+			for(int i = 0;i<nbrOfPlayers;i++) {
+				if(j==0) {
+					System.out.println("add player"+i);
+					panelTakenSticks.add(new JLabel("Player "+i));
+
+				} else {
+					takenSticks[i] = new JLabel("0");
+					panelTakenSticks.add(takenSticks[i]);
+
+				}
+			}
+		}
+		trumfPanel.add(panelTakenSticks);
+		getContentPane().add(sticks,BorderLayout.NORTH);
 
 	}
 
-	public void newGame(int id, final int nbrOfPlayers) {
-
-		panelScoreBoard = new JPanel();
+	private void createScoreBoard(int id) {
+		JPanel panelScoreBoard = new JPanel();
 		panelScoreBoard.setLayout(new GridLayout(nbrOfRounds*2+1,nbrOfPlayers+1));
 		scoreBoard =  new JLabel[nbrOfRounds*2+1][nbrOfPlayers+1];
 		for(int i = 0;i<nbrOfRounds*2+1;i++) {
@@ -238,98 +331,20 @@ public class GUI extends JFrame{
 					} else {
 						scoreBoard[i][j] = new JLabel("");
 					}
-
-
 				}
-
 				panelScoreBoard.add(scoreBoard[i][j]);
 			}
 		}
 		getContentPane().add(panelScoreBoard,BorderLayout.EAST);
-		revalidate();
-
-		roundNbr = 0;
-
-		myCards = new JPanel();
-		myCards.setLayout(new GridLayout(1,nbrOfRounds));
 
 
-		middleCards = new JPanel();
-		middleCards.setLayout(new GridBagLayout());
-		middleCards.setAlignmentX(CENTER_ALIGNMENT);
-		middleCards.setAlignmentY(CENTER_ALIGNMENT);
-
-		trumfPanel = new JPanel();
-
-
-
-		myId = id;
-		this.nbrOfPlayers = nbrOfPlayers;
-		nbrOfPlayedCards = nbrOfPlayers;
-
-		JPanel sticks = new JPanel();
-		sendSticks = new JButton("Send sticks");
-		sendSticks.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				if(setSticks) {
-					
-					if(playersSetSticks == nbrOfPlayers-1 && (int)spinner.getValue() + totalSticks == sticksInRound) {
-						textMessage.setText("Total sticks +  your sticks = total sticks in the round. Error");
-						revalidate();
-						return;
-					}
-					Thread t = new Thread() {
-						public void run() {
-							setSticks = false;
-							System.out.println("count: "+ spinner.getValue());
-							monitor.addNumberOfSticks((int)spinner.getValue());
-							textMessage.setText("Wait for other players...");
-							revalidate();
-						}
-					};
-					t.start();		
-				}
-
-				// TODO Auto-generated method stub
-				//if(event.)
-
-			}
-		});
-		spinner = new JSpinner( new SpinnerNumberModel( 1,0,nbrOfRounds,1 ) );
-
-		sticks.add(spinner);
-		sticks.add(sendSticks);
-		sticks.add(textMessage);
-		panelTakenSticks = new JPanel();
-		panelTakenSticks.setLayout(new BorderLayout(2,3));
-
-		takenSticks = new JLabel[nbrOfPlayers];
-		for(int j=0;j<2;j++) {
-			for(int i = 0;i<nbrOfPlayers;i++) {
-				if(j==0) {
-					//takenSticks.
-					//panelTakenSticks.add()
-					System.out.println("add player"+i);
-					panelTakenSticks.add(new JLabel("Player "+i));
-
-				} else {
-					takenSticks[i] = new JLabel("0");
-					panelTakenSticks.add(takenSticks[i]);
-
-				}
-				//takenSticks.add(new )
-			}
-		}
-		trumfPanel.add(panelTakenSticks);
-		getContentPane().add(sticks,BorderLayout.NORTH);
-
-
-		// write gameplan in gui
-
-		// TODO Auto-generated method stub
 	}
+	
+	/**
+	 * Parse card to png file.
+	 * @param card The card to parse.
+	 * @return
+	 */
 	private String parseCardToPngString(Card card) {
 		String path = "";
 		switch (card.getValue()) {
@@ -362,7 +377,6 @@ public class GUI extends JFrame{
 			path+="spades.png";
 			break;
 		}
-		//System.out.println(path);
 		return path;
 	}
 
@@ -380,6 +394,7 @@ public class GUI extends JFrame{
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	private ImageIcon createImageIcon(String path, int width, int height) {
+		// TODO find correct folder
 		ImageIcon imgIcon = new ImageIcon("C:/Users/Markus/ProjectNetwork/Resources/"+path);
 		Image img = imgIcon.getImage();
 		img = img.getScaledInstance( width, height,  java.awt.Image.SCALE_SMOOTH ) ;  
@@ -406,6 +421,7 @@ public class GUI extends JFrame{
 							System.out.println("send to monitor");
 							textMessage.setText("Wait for other players");
 							monitor.addNextCard(card);
+							
 						}
 					};
 					t.start();
@@ -469,8 +485,12 @@ public class GUI extends JFrame{
 		public void mouseReleased(MouseEvent e) {
 		}
 	}
+	
+	/**
+	 * Tells player that it is its turn to choice a card.
+	 */
+	
 	public void choiceNextCard() {
-		System.out.println("Välj nästa kort!");
 		choiceCard = true;
 		// start timer here and put text.
 		textMessage.setText("Choice next card!!!!!");
@@ -478,35 +498,32 @@ public class GUI extends JFrame{
 
 	}
 
+	/**
+	 * Tells player that it is its turn to choice the number of sticks.
+	 */
 	public void setSticks() {
-		System.out.println("setNbrofSticks NOW!");
 		textMessage.setText("Set numer of sticks!");
 		revalidate();
 		setSticks = true;
 	}
 
+	/**
+	 * Set the score for player 
+	 * @param score The score
+	 * @param playerId The player
+	 */
 	public void setScore(int score, int playerId) {
-		// TODO Auto-generated method stub
-		System.out.println("Player: "+playerId+" . Score: "+score);
 		scoreBoard[roundNbr][playerId].setText(score+"");
 		revalidate();
-		if(dir == -1) {
-			if(sticksInRound != 1) {
-				sticksInRound--;
-			} else {
-				dir = 1;
-			}
-		} else {
-			sticksInRound++;
-		}
-
+		
 	}
 
+	/**
+	 * Update screen then finish dealing. 
+	 */
 	public void finishDealing() {
-		// TODO Auto-generated method stub
 		getContentPane().add(myCards,BorderLayout.SOUTH);
 		revalidate();
-
 	}
 
 }
