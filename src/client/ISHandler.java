@@ -85,6 +85,7 @@ public class ISHandler extends Thread{
 				
 				case Protocol.SET_STICKS:
 					// Also start timer...
+					
 					gui.setSticks();
 					
 					break;

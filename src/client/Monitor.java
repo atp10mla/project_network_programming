@@ -61,7 +61,8 @@ public class Monitor {
 		// TODO Auto-generated method stub
 		this.nbrOfSticks = nbrOfSticks;
 		commandos.addLast(Protocol.SET_STICKS);
-		
+		System.out.println("in monitor!");
+		notifyAll();
 	}
 	
 	
