@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,8 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-
-import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor.SetterOnlyReflection;
 
 import protocol.Card;
 
@@ -199,6 +196,7 @@ public class GUI extends JFrame{
 		nbrOfDiamonds = 0;
 		nbrOfClubs = 0;
 		 */
+		
 		totalSticks = 0;
 		playersSetSticks = 0;
 		for(int i = 0;i<takenSticks.length;i++) {
