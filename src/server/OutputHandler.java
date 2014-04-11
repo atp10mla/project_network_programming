@@ -18,6 +18,7 @@ public class OutputHandler extends Thread {
 	}
 
 	public void run() {
+		monitor.addPlayer(p);
 		while(true) {
 			int cmd = monitor.getNextCommando(p); 
 
@@ -30,12 +31,15 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.PLAYED_CARD:
 				Card c = monitor.getNextPlayedCard(p);
+				System.out.println("Send PLAYED_CARD to player " + p.getId());
+				writeCommandAndData(Protocol.PLAYED_CARD);
 				writeCommandAndData(c.getOwner().getId());
 				writeCommandAndData(c.getSuit());
 				writeCommandAndData(c.getValue());
 				break;
 			case Protocol.ROUND_SCORE:
 				writeCommandAndData(Protocol.ROUND_SCORE);
+				System.out.println("Send ROUND_SCORE to player " + p.getId());
 				int iter;
 				writeCommandAndData((iter = monitor.getNumberOfPlayers()));
 				for(int id=1; id<=iter; id++) {
@@ -44,18 +48,25 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.SET_TRUMF:
 				writeCommandAndData(Protocol.SET_TRUMF);
+				System.out.println("Send SET_TRUMF to player " + p.getId());
 				writeCommandAndData(monitor.getTrumf().getSuit());
 				writeCommandAndData(monitor.getTrumf().getValue());
 				break;
 			case Protocol.STICK_WINNER:
 				writeCommandAndData(Protocol.STICK_WINNER);
+				System.out.println("Send STICK_WINNER to player " + p.getId());
 				writeCommandAndData(monitor.returnStickWinner().getId());
 				break;
 			case Protocol.YOUR_TURN:
 				writeCommandAndData(Protocol.YOUR_TURN);
+				System.out.println("Send YOUR_TURN to player " + p.getId());
 				break;
-			}
+			case Protocol.SET_WANTED_STICKS:
+				writeCommandAndData(Protocol.SET_WANTED_STICKS);
+				
+				break;
 
+			}
 		}
 
 	}
@@ -70,14 +81,16 @@ public class OutputHandler extends Thread {
 
 	private void makeNewGame() {
 		// send players
+		writeCommandAndData(Protocol.NEW_GAME);
+		System.out.println("Send NEW_GAME to player " + p.getId());
 		writeCommandAndData(p.getId());
 		writeCommandAndData(monitor.getNumberOfPlayers());
-		startNewRound();
 	}
 
 	private void startNewRound() {
 		// send cards for new round
 		writeCommandAndData(Protocol.NEW_ROUND);
+		System.out.println("Send NEW_ROUND to player " + p.getId());
 		int currRound = monitor.getRoundNumber();
 		writeCommandAndData(currRound);
 		for(int i=0; i<currRound; i++) {

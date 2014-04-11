@@ -22,27 +22,21 @@ public class InputHandler extends Thread {
 			int com = 0;
 			try {
 				com = is.read();
+				System.out.println("Read : " + com + " from player " + p.getId());
 			} catch (IOException e) {
 				System.out.println("Could not read from is");
 				System.exit(1);
 			}
 			
 			switch (com) {
-			case Protocol.GET_DELAY: {
-				monitor.sendCommando(Protocol.SEND_MORE_TIME);
-			}
-			case Protocol.SEND_CARD: {
-				monitor.sendCommando(Protocol.PLAYED_CARD);
+			case Protocol.SEND_CARD: { // 1
 				int suit = readOneCommand(is);
 				int value = readOneCommand(is);
 				monitor.sendPlayedCard(new Card(suit, value, p));
+				
 			}
-			case Protocol.SET_WANTED_STICKS: {
-				monitor.sendCommando(Protocol.SET_WANTED_STICKS);
-				int playerNbr = readOneCommand(is);
-				int wishNbrOfSticks = readOneCommand(is);
-				monitor.sendCommando(playerNbr);
-				monitor.sendCommando(wishNbrOfSticks);
+			case Protocol.GET_DELAY: {
+				monitor.sendCommando(Protocol.SEND_MORE_TIME);
 			}
 			case Protocol.SET_STICKS:
 				monitor.setWantedSticks(readOneCommand(is), p);
