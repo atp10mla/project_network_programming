@@ -42,15 +42,19 @@ public class Monitor {
 	}
 
 	public synchronized void startNewRound() {
+		for(Player p : party) {
+			p.setWantedSticks(-1);
+		}
 		shuffle();
 		trumf = getNextCard();
 		for(Player p : party) {
 			commands.get(p).add(Protocol.NEW_ROUND);
 			commands.get(p).add(Protocol.SET_TRUMF);
+			notifyAll();
 		}
 		
 		fixWantedSticks();
-		// fix wanted sticks
+		
 		commands.get(roundStarter).add(Protocol.YOUR_TURN);
 		stickStarter = stickWinner;
 		roundStarter = getPlayerWithId(coolIndex(roundStarter,party.size()));
@@ -113,7 +117,7 @@ public class Monitor {
 			commands.get(p).add(Protocol.PLAYED_CARD);
 		}
 		currentStickCards.add(card);
-		if(currentStickCards.size() == currentRound) {
+		if(currentStickCards.size() == party.size()) {
 			getStickWinner();
 		} else {
 			stickStarter = getPlayerWithId(coolIndex(stickStarter,party.size()));
@@ -155,7 +159,7 @@ public class Monitor {
 		}
 		globalSticks = 0;
 		System.out.println("Current round has ended: " + currentRound);
-		currentRound -= direction;
+		currentRound = currentRound - direction;
 		if(currentRound == 4) {
 			System.out.println("Game is over.");
 			//			System.exit(0);
@@ -170,6 +174,8 @@ public class Monitor {
 			currentRound = 1;
 			direction = -1;
 		}
+		System.out.println("Starting new round");
+		notifyAll();
 		startNewRound();
 	}
 
@@ -226,7 +232,6 @@ public class Monitor {
 		cardPosition = 0;
 	}
 	public synchronized void readyForNewRound() {
-		//canStartNewRound = true;
 		notifyAll();
 	}
 	public synchronized Card getNextPlayedCard(Player p) {
