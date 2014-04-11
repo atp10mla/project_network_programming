@@ -21,7 +21,6 @@ public class OutputHandler extends Thread {
 		monitor.addPlayer(p);
 		while(true) {
 			int cmd = monitor.getNextCommando(p); 
-
 			switch(cmd) {
 			case Protocol.NEW_GAME:
 				makeNewGame();
@@ -68,7 +67,10 @@ public class OutputHandler extends Thread {
 				writeCommandAndData(tempPlayer.getId());
 				writeCommandAndData(tempPlayer.getWantedSticks());
 				break;
-
+			case Protocol.SET_STICKS:
+				writeCommandAndData(Protocol.SET_STICKS);
+				System.out.println("Send SET_STICKS to player " + p.getId());
+				break;
 			}
 		}
 
