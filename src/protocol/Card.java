@@ -2,7 +2,7 @@ package protocol;
 
 import server.Player;
 
-public class Card {
+public class Card implements Comparable<Card>{
 	public static final int SPADES = 1;
 	public static final int HEARTS = 2;
 	public static final int DIAMONDS = 3;
@@ -78,6 +78,24 @@ public class Card {
 			return false;
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(Card other) {
+		if(this.getSuit() < other.getSuit()) {
+			return 1;
+		} else if(this.getSuit()>other.getSuit()) {
+			return -1;
+		} else {
+			if(this.getValue()>other.getValue()) {
+				return 1;
+			} else {
+				return -1;
+			}
+			
+		}
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

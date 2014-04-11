@@ -15,10 +15,10 @@ public class Client {
 		gui.setVisible(true);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
-		
+		/*
 		Socket socket = null; 
 		try {
-			socket = new Socket("192.168.0.17", 5000);
+			socket = new Socket("localhost", 5000);
 			//socket = new Socket("localhost", 5000);
 		} catch (UnknownHostException e) {
 			System.out.println("Unknown host");
@@ -38,5 +38,6 @@ public class Client {
 		}
 		new OSHandler(os, monitor).start();
 		new ISHandler(is, gui).start();
+	*/
 	}
 }

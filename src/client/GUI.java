@@ -1,7 +1,10 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -10,6 +13,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EmptyBorder;
 
 import protocol.Card;
 
@@ -82,27 +90,29 @@ public class GUI extends JFrame{
 	 */
 	public GUI(Monitor monitor) {
 		setTitle("Plump");
-		setSize(1366,768); // default size is 0,0
+		setSize(800,600); // default size is 0,0
 		setLayout(new BorderLayout());
 		this.monitor = monitor;
-		/*
-		newGame(2, 5);
+		newGame(1, 2);
 		cleanHand();
 		setWantedSticks(2, 3);
 		setScore(13, 1);
-		addCardToHand(new Card(2,4));
-		addCardToHand(new Card(6,2));
-		addCardToHand(new Card(3,3));
-		addNextPlayedCard(new Card(3,3),2);
-		addNextPlayedCard(new Card(3,3),2);
-
+		addCardToHand(new Card(Card.HEARTS,2));
+		addCardToHand(new Card(Card.DIAMONDS,6));
+		addCardToHand(new Card(Card.CLUBS,3));
+		addCardToHand(new Card(Card.DIAMONDS,2));
+		addCardToHand(new Card(Card.CLUBS,2));
+		addCardToHand(new Card(Card.DIAMONDS,9));
+		addCardToHand(new Card(Card.CLUBS,9));
+		finishDealing();
+	
 		addNextPlayedCard(new Card(3,3),1);
-
-		addNextPlayedCard(new Card(3,2),2);
+		addNextPlayedCard(new Card(3,2),1);
 
 		choiceNextCard();
-		setTrumf(new Card(5,3));
-		 */
+		setTrumf(new Card(3,5));
+
+		
 		//getContentPane().add(myCards,BorderLayout.NORTH);
 		//panel.add(null,BorderLayout.CENTER);
 		//panel.add(new JLabel("Example"), BorderLayout.EAST);
@@ -119,6 +129,7 @@ public class GUI extends JFrame{
 		ImageIcon icon = createTrumfCard(card);
 		JLabel label = new JLabel();
 		label.setIcon(icon); 
+		trumfPanel.add(new JLabel("Trumf"));
 		trumfPanel.add(label);
 		// Dont know if i need this row...
 		getContentPane().add(trumfPanel,BorderLayout.WEST);
@@ -157,14 +168,6 @@ public class GUI extends JFrame{
 	public void addCardToHand(Card card) {
 		currentHand.add(card);
 
-		ImageIcon icon = createCardOnHand(card);
-		JLabel label = new JLabel();
-
-		label.setIcon(icon); 
-		label.addMouseListener(new CardListener(card,label));
-		label.setHorizontalAlignment(JLabel.CENTER);
-		myCards.add(label);
-
 		/*
 		currentHand.add(card);
 
@@ -198,6 +201,8 @@ public class GUI extends JFrame{
 		ImageIcon icon = createCardInMiddle(card);
 		JLabel label = new JLabel();
 		label.setIcon(icon); 
+
+		label.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,true));
 		middleCards.add(label);
 		label.setHorizontalAlignment(JLabel.CENTER);
 		label.setVerticalAlignment(JLabel.CENTER);
@@ -240,19 +245,33 @@ public class GUI extends JFrame{
 	public void newGame(int id, final int nbrOfPlayers) {
 		this.nbrOfPlayers = nbrOfPlayers;
 		createScoreBoard(id);
-		createStickPanel();
+		createUpperLayout();
+		trumfPanel = new JPanel();
+		trumfPanel.setLayout(new BoxLayout(trumfPanel,BoxLayout.Y_AXIS));
+		trumfPanel.setBackground(new Color(78,222,97));
+		trumfPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		
 		roundNbr = 0;
 		myCards = new JPanel();
+		myCards.setBorder(new EmptyBorder(10, 10, 10, 10));
+		myCards.setBackground(new Color(78,222,97));
 		myCards.setLayout(new GridLayout(1,nbrOfRounds));
 		middleCards = new JPanel();
+		middleCards.setBorder(BorderFactory.createLineBorder(Color.BLACK,5,false));
+		 
 		middleCards.setLayout(new GridBagLayout());
 		middleCards.setAlignmentX(CENTER_ALIGNMENT);
 		middleCards.setAlignmentY(CENTER_ALIGNMENT);
-		trumfPanel = new JPanel();
+		middleCards.setBackground(new Color(214,193,75));
 		nbrOfPlayedCards = nbrOfPlayers;
 		revalidate();
 	}
-	private void createStickPanel() {
+	private void createUpperLayout() {
+		JPanel upper = new JPanel();
+		
+		upper.setSize(100, 50);
+		upper.setLayout(new BoxLayout(upper,BoxLayout.Y_AXIS));
+		
 		JPanel sticks = new JPanel();
 		sendSticks = new JButton("Send sticks");
 		sendSticks.addActionListener(new ActionListener() {
@@ -281,41 +300,73 @@ public class GUI extends JFrame{
 		spinner = new JSpinner( new SpinnerNumberModel( 1,0,nbrOfRounds,1 ) );
 		sticks.add(spinner);
 		sticks.add(sendSticks);
-		sticks.add(textMessage);
+		
 		JPanel panelTakenSticks = new JPanel();
-		panelTakenSticks.setLayout(new BorderLayout(2,3));
-
+//		panelTakenSticks.setLayout(new BorderLayout(2,nbrOfPlayers));
+		panelTakenSticks.setLayout(new GridBagLayout());
+		panelTakenSticks.setBorder(new EmptyBorder(10, 10, 10, 10));
+		GridBagConstraints c = new GridBagConstraints();
+		                //natural height, maximum width
+		
+		
+		
+		
+		
 		takenSticks = new JLabel[nbrOfPlayers];
 		for(int j=0;j<2;j++) {
 			for(int i = 0;i<nbrOfPlayers;i++) {
 				if(j==0) {
 					System.out.println("add player"+i);
-					panelTakenSticks.add(new JLabel("Player "+i));
-
+					c.weightx = 0.5;
+					c.fill = GridBagConstraints.HORIZONTAL;
+					c.gridx = i;
+					c.gridy = 0;
+					
+					panelTakenSticks.add(new JLabel("Player "+(i+1)),c);
+					
 				} else {
 					takenSticks[i] = new JLabel("0");
-					panelTakenSticks.add(takenSticks[i]);
+					
+					c.fill = GridBagConstraints.HORIZONTAL;
+					c.gridx = i;
+					c.gridy = 11;
+					
+					panelTakenSticks.add(takenSticks[i],c);
 
 				}
 			}
 		}
-		trumfPanel.add(panelTakenSticks);
-		getContentPane().add(sticks,BorderLayout.NORTH);
+		upper.setBackground(new Color(78,222,97));
+		sticks.setBackground(new Color(78,222,97));
+		panelTakenSticks.setBackground(new Color(78,222,97));
+		upper.add(sticks);
+		upper.add(textMessage);
+		textMessage.setFont(new Font(textMessage.getFont().getFontName(),Font.PLAIN,20));
+		textMessage.setForeground(Color.RED);
+		textMessage.setAlignmentX(CENTER_ALIGNMENT);
+		textMessage.setBorder(new EmptyBorder(2, 2, 2, 2));
+		upper.add(panelTakenSticks);
+		getContentPane().add(upper,BorderLayout.NORTH);
 
 	}
 
 	private void createScoreBoard(int id) {
 		JPanel panelScoreBoard = new JPanel();
-		panelScoreBoard.setLayout(new GridLayout(nbrOfRounds*2+1,nbrOfPlayers+1));
+		panelScoreBoard.setLayout(new GridLayout(nbrOfRounds*2+2,nbrOfPlayers+1));
+		
+		 panelScoreBoard.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(0, 0, 0, 0),BorderFactory.createLineBorder(Color.BLACK,5,false)));
+		 panelScoreBoard.setBackground(new Color(218,242,245));
+		 
+			
 		scoreBoard =  new JLabel[nbrOfRounds*2+1][nbrOfPlayers+1];
 		for(int i = 0;i<nbrOfRounds*2+1;i++) {
 			for(int j=0;j<=nbrOfPlayers;j++){
 				if(j==0) {
 					if(i!=0) {
 						if(i<=nbrOfRounds) {
-							scoreBoard[i][j] = new JLabel(""+(nbrOfRounds+1-i));
+							scoreBoard[i][j] = new JLabel("  "+(nbrOfRounds+1-i));
 						} else {
-							scoreBoard[i][j] = new JLabel(""+(i-nbrOfRounds));	
+							scoreBoard[i][j] = new JLabel("  "+(i-nbrOfRounds));	
 						}
 					} else {
 						scoreBoard[i][j] = new JLabel("");
@@ -324,7 +375,7 @@ public class GUI extends JFrame{
 				} else {
 					if(i==0) {
 						if(id==j) {
-							scoreBoard[i][j] = new JLabel(""+j +"(you) ");
+							scoreBoard[i][j] = new JLabel(""+j +"(you)    ");
 						} else {
 							scoreBoard[i][j] = new JLabel(""+j);
 						}
@@ -522,8 +573,22 @@ public class GUI extends JFrame{
 	 * Update screen then finish dealing. 
 	 */
 	public void finishDealing() {
+		Collections.sort(currentHand);
+		for(Card card:currentHand) {
+			ImageIcon icon = createCardOnHand(card);
+			JLabel label = new JLabel();
+			label.setIcon(icon); 
+			label.addMouseListener(new CardListener(card,label));
+			label.setHorizontalAlignment(JLabel.CENTER);
+		
+			myCards.add(label);
+		}
+		
+		
 		getContentPane().add(myCards,BorderLayout.SOUTH);
 		revalidate();
 	}
+	
+	
 
 }
