@@ -68,7 +68,10 @@ public class OutputHandler extends Thread {
 				writeCommandAndData(tempPlayer.getId());
 				writeCommandAndData(tempPlayer.getWantedSticks());
 				break;
-
+			case Protocol.SET_STICKS:
+				writeCommandAndData(Protocol.SET_STICKS);
+				System.out.println("Send SET_STICKS to player " + p.getId());
+				break;
 			}
 		}
 

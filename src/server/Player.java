@@ -15,6 +15,7 @@ public class Player {
 		this.name = name;
 		this.id = id;
 		score = 0;
+		wantedSticks = -1;
 	}
 	
 	public int getWantedSticks() {

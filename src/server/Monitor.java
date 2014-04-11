@@ -24,7 +24,7 @@ public class Monitor {
 
 	public Monitor() {
 		for(int i=1; i<5; i++)
-			for(int j=1; j<14; j++)
+			for(int j=2; j<=14; j++)
 				deck.add(new Card(i,j));
 		shuffle();
 	}
@@ -48,11 +48,24 @@ public class Monitor {
 			commands.get(p).add(Protocol.NEW_ROUND);
 			commands.get(p).add(Protocol.SET_TRUMF);
 		}
+		fixWantedSticks();
 		// fix wanted sticks
 		commands.get(roundStarter).add(Protocol.YOUR_TURN);
 		stickStarter = stickWinner;
-		roundStarter = getPlayerWithId((roundStarter.getId()+1) % (party.size() + 1));
+		roundStarter = getPlayerWithId(coolIndex(roundStarter,party.size()));
 		notifyAll();
+	}
+
+	private int coolIndex(Player p, int size) {
+		return p.getId() % size + 1;
+	}
+	public synchronized void fixWantedSticks() {
+
+		for(int i=stickStarter.getId(); i!=coolIndex(stickStarter, party.size()); i++) {
+			Player temp = getPlayerWithId(i);
+			commands.get(temp).add(Protocol.SET_STICKS);
+			while(getPlayerWithId(coolIndex(temp, party.size())).getWantedSticks() == -1);
+		}
 	}
 
 	public synchronized void waitForStart() {
@@ -83,27 +96,39 @@ public class Monitor {
 			// fix wanted sticks stuff
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		} else {
-			stickStarter = getPlayerWithId((stickStarter.getId()) % (party.size()) + 1);
+			stickStarter = getPlayerWithId(coolIndex(stickStarter,party.size()));
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);		
 		}
-//		stickWinner.addStick();
+		//		stickWinner.addStick();
 		if(globalSticks == currentRound) {
 			handleRoundEnd();
 		}
 		notifyAll();
 	}
 
+	private int direction = 1;
+	private boolean firstRoundOne = true;
 	private synchronized void handleRoundEnd() {
 		for(Player p : party) {
 			commands.get(p).add(Protocol.ROUND_SCORE);
 		}
 		globalSticks = 0;
-
-		if(currentRound == 1) {
+		System.out.println("Current round has ended: " + currentRound);
+		if(currentRound == 4) {
 			System.out.println("Game is over.");
-			System.exit(0);
+			//			System.exit(0);
+			// send ultimate winner
+			return;
 		}
-		currentRound--;
+		currentRound -= direction;
+		if(firstRoundOne && currentRound == 1) {
+			firstRoundOne = false;
+			currentRound = 1;
+		}
+		if(!firstRoundOne && currentRound == 0) {
+			currentRound = 1;
+			direction = -1;
+		}
 		startNewRound();
 	}
 
