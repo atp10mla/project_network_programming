@@ -17,13 +17,13 @@ public class Card {
 	private int suit;
 	private Player owner;
 	
-	public Card(int value, int suit, Player owner) {
+	public Card(int suit, int value, Player owner) {
 		this.value = value;
 		this.suit = suit;
 		this.owner = owner;
 	}
 
-	public Card(int value, int suit) {
+	public Card(int suit, int value) {
 		this.value = value;
 		this.suit = suit;
 	}

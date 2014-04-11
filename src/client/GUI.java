@@ -29,6 +29,8 @@ public class GUI extends JFrame{
 
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
 
+	private JLabel textMessage = new JLabel();
+	
 	private boolean setSticks = false;
 	
 	private JPanel myCards;
@@ -109,7 +111,9 @@ public class GUI extends JFrame{
 	}
 	public void addStick(int playerId) {
 		System.out.println("Player: "+playerId+" get one stick");
-		totalSticks = 0;
+		totalSticks++;
+		middleCards.removeAll();
+		revalidate();
 		// update GUI . +1 for player
 	}
 
@@ -124,22 +128,20 @@ public class GUI extends JFrame{
 
 	}
 	public void addCardToHand(Card card) {
+
+		System.out.println("Suit: "+ card.getSuit()+" Value: "+card.getValue() );
+		currentHand.add(card);
+
+		ImageIcon icon = createCardOnHand(card);
+		JLabel label = new JLabel();
+
+		label.setIcon(icon); 
+		label.addMouseListener(new CardListener(card,label));
+		label.setHorizontalAlignment(JLabel.CENTER);
+		myCards.add(label);
+
+		
 		/*
-		switch(card.getSuit()) {
-		case Card.CLUBS:
-			nbrOfClubs++;
-			break;
-		case Card.HEARTS:
-			nbrOfHearts++;
-			break;
-		case Card.DIAMONDS:
-			nbrOfDiamonds++;
-			break;
-		case Card.SPADES:
-			nbrOfSpades++;
-			break;
-		}
-		 */
 		currentHand.add(card);
 
 		ImageIcon icon = createCardOnHand(card);
@@ -150,9 +152,8 @@ public class GUI extends JFrame{
 		label.addMouseListener(new CardListener(card,label));
 		label.setHorizontalAlignment(JLabel.CENTER);
 		myCards.add(label);
-
 		getContentPane().add(myCards,BorderLayout.SOUTH);
-
+*/
 
 	}
 
@@ -241,9 +242,8 @@ public class GUI extends JFrame{
 		roundNbr = 0;
 		
 		myCards = new JPanel();
-
-		myCards.setLayout(new FlowLayout());
-		myCards.setAlignmentX(CENTER_ALIGNMENT);
+		myCards.setLayout(new GridLayout(1,10));
+		
 
 		middleCards = new JPanel();
 		middleCards.setLayout(new GridBagLayout());
@@ -283,6 +283,7 @@ public class GUI extends JFrame{
 		spinner = new JSpinner( new SpinnerNumberModel( 1,1,10,1 ) );
 	    sticks.add(spinner);
 	    sticks.add(sendSticks);
+	    sticks.add(textMessage);
 	    getContentPane().add(sticks,BorderLayout.NORTH);
 	    
 		
@@ -322,6 +323,7 @@ public class GUI extends JFrame{
 			path+="spades.png";
 			break;
 		}
+		System.out.println(path);
 		return path;
 	}
 
@@ -362,7 +364,9 @@ public class GUI extends JFrame{
 
 					Thread t = new Thread() {
 						public void run() {
-
+							System.out.println("send to monitor");
+							textMessage.setText("");
+							revalidate();
 							monitor.addNextCard(card);
 						}
 					};
@@ -394,14 +398,19 @@ public class GUI extends JFrame{
 					} else {
 						Thread t = new Thread() {
 							public void run() {
+								System.out.println("send to monitor");
+								textMessage.setText("");
+								revalidate();
 								monitor.addNextCard(card);
 							}
 						};
-						t.start();		
+						t.start();
+						
 						currentHand.remove(card);
 						myCards.remove(comp);
-						// send card and delete from view...
+
 						revalidate();
+						// send card and delete from view...
 						choiceCard = false;
 
 					}
@@ -426,6 +435,9 @@ public class GUI extends JFrame{
 		System.out.println("Välj nästa kort!");
 		choiceCard = true;
 		// start timer here and put text.
+		textMessage.setText("Välj nästa kort");
+		revalidate();
+		
 	}
 
 	public void setSticks() {
@@ -444,6 +456,13 @@ public class GUI extends JFrame{
 		System.out.println("Player: "+playerId+" . Score: "+score);
 
 		scoreBoard[roundNbr][playerId].setText(score+"");
+		revalidate();
+		
+	}
+
+	public void finishDealing() {
+		// TODO Auto-generated method stub
+		getContentPane().add(myCards,BorderLayout.SOUTH);
 		revalidate();
 		
 	}
