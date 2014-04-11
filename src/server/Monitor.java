@@ -17,7 +17,7 @@ public class Monitor {
 	private Card trumf;
 	private Player stickStarter, roundStarter;
 	private int cardPosition = 0;
-	private int currentRound = 10;
+	private int currentRound = 3;
 	private int globalSticks;
 	private Player stickWinner;
 	private boolean gameIsRunning = false;
@@ -194,7 +194,7 @@ public class Monitor {
 		return stickWinner;
 	}
 	public int getScoreOfPlayer(int i) {
-		return party.get(i).getScore();
+		return party.get(i-1).getScore();
 	}
 	public synchronized Card getNextCard() {
 		return deck.get(cardPosition++);
