@@ -33,14 +33,14 @@ public class InputHandler extends Thread {
 				int suit = readOneCommand(is);
 				int value = readOneCommand(is);
 				monitor.sendPlayedCard(new Card(suit, value, p));
-				
-			}
-			case Protocol.GET_DELAY: {
-				monitor.sendCommando(Protocol.SEND_MORE_TIME);
 			}
 			case Protocol.SET_STICKS:
 				monitor.setWantedSticks(readOneCommand(is), p);
 				break;
+			case Protocol.GET_DELAY: {
+				monitor.sendCommando(Protocol.SEND_MORE_TIME);
+				break;
+			}
 			default: {
 				// some error
 			}

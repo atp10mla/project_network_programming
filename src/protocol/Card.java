@@ -13,13 +13,13 @@ public class Card {
 	public static final int QUEEN = 12;
 	public static final int KING = 13;
 	
-	private int value;
 	private int suit;
+	private int value;
 	private Player owner;
 	
-	public Card(int value, int suit, Player owner) {
-		this.value = value;
+	public Card(int suit, int value, Player owner) {
 		this.suit = suit;
+		this.value = value;
 		this.owner = owner;
 	}
 

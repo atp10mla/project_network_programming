@@ -82,10 +82,7 @@ public class Monitor {
 			globalSticks++;
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		} else {
-			System.out.println(stickStarter);
 			stickStarter = getPlayerWithId((stickStarter.getId()+1) % (party.size() + 1));
-			System.out.println("Wierd number" + (stickStarter.getId()+1) % (party.size() + 1));
-			System.out.println(stickStarter);
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		}
 //		stickWinner.addStick();
@@ -202,7 +199,15 @@ public class Monitor {
 	public synchronized Card getNextCard() {
 		return deck.get(cardPosition++);
 	}
-	public void setWantedSticks(int nbrOfSticks, Player p) {
+	private Player currentStickSetter;
+	public synchronized void setWantedSticks(int nbrOfSticks, Player p) {
 		p.setWantedSticks(nbrOfSticks);
+		currentStickSetter = p;
+		for(Player player : party) {
+			commands.get(player).add(Protocol.SET_WANTED_STICKS);
+		}
+	}
+	public Player getCurrentSticker() {
+		return currentStickSetter;
 	}
 }

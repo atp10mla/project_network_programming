@@ -63,7 +63,9 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.SET_WANTED_STICKS:
 				writeCommandAndData(Protocol.SET_WANTED_STICKS);
-				
+				Player tempPlayer = monitor.getCurrentSticker();
+				writeCommandAndData(tempPlayer.getId());
+				writeCommandAndData(tempPlayer.getWantedSticks());
 				break;
 
 			}

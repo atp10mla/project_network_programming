@@ -17,6 +17,10 @@ public class Player {
 		score = 0;
 	}
 	
+	public int getWantedSticks() {
+		return wantedSticks;
+	}
+	
 	public void setWantedSticks(int v) {
 		wantedSticks = v;
 	}
