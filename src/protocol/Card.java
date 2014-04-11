@@ -23,9 +23,9 @@ public class Card {
 		this.owner = owner;
 	}
 
-	public Card(int value, int suit) {
-		this.value = value;
+	public Card(int suit, int value) {
 		this.suit = suit;
+		this.value = value;
 	}
 	
 	public Player getOwner() {
