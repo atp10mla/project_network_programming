@@ -113,52 +113,22 @@ public class Monitor {
 			commands.get(p).add(Protocol.PLAYED_CARD);
 		}
 		currentStickCards.add(card);
-		if(currentStickCards.size() == party.size()) {
-			globalSticks++;
+		if(currentStickCards.size() == currentRound) {
 			getStickWinner();
-			// fix wanted sticks stuff
-			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		} else {
 			stickStarter = getPlayerWithId(coolIndex(stickStarter,party.size()));
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);		
 		}
-		//		stickWinner.addStick();
 		if(globalSticks == currentRound) {
 			handleRoundEnd();
 		}
 		notifyAll();
 	}
-
-	private int direction = 1;
-	private boolean firstRoundOne = true;
-	private synchronized void handleRoundEnd() {
-		for(Player p : party) {
-			commands.get(p).add(Protocol.ROUND_SCORE);
-		}
-		globalSticks = 0;
-		System.out.println("Current round has ended: " + currentRound);
-		if(currentRound == 4) {
-			System.out.println("Game is over.");
-			//			System.exit(0);
-			// send ultimate winner
-			return;
-		}
-		currentRound -= direction;
-		if(firstRoundOne && currentRound == 1) {
-			firstRoundOne = false;
-			currentRound = 1;
-		}
-		if(!firstRoundOne && currentRound == 0) {
-			currentRound = 1;
-			direction = -1;
-		}
-		startNewRound();
-	}
-
 	public synchronized void getStickWinner() {
 		Card firstCardInRound = currentStickCards.get(0);
 		Card currentBestCard = firstCardInRound;
 		stickWinner = firstCardInRound.getOwner();
+		globalSticks++;
 		for(Card card : currentStickCards) {
 			if(card.moreValuableThan(currentBestCard, trumf, firstCardInRound)) {
 				stickWinner = card.getOwner();
@@ -172,8 +142,38 @@ public class Monitor {
 		System.out.println("Round " + currentRound + " stick " + globalSticks + " was won by player " + stickWinner.getId());
 		stickStarter = stickWinner;
 		stickWinner.addStick();
+		if(globalSticks != currentRound) {
+			commands.get(stickStarter).add(Protocol.YOUR_TURN);
+		}
+	}
+	
+	private int direction = 1;
+	private boolean firstRoundOne = true;
+	private synchronized void handleRoundEnd() {
+		for(Player p : party) {
+			commands.get(p).add(Protocol.ROUND_SCORE);
+		}
+		globalSticks = 0;
+		System.out.println("Current round has ended: " + currentRound);
+		currentRound -= direction;
+		if(currentRound == 4) {
+			System.out.println("Game is over.");
+			//			System.exit(0);
+			// send ultimate winner
+			return;
+		}
+		if(firstRoundOne && currentRound == 1) {
+			firstRoundOne = false;
+			currentRound = 1;
+		}
+		if(!firstRoundOne && currentRound == 0) {
+			currentRound = 1;
+			direction = -1;
+		}
+		startNewRound();
 	}
 
+	
 	private Player getPlayerWithId(int i) {
 		Player ret = null;
 		for(Player p : party) {
