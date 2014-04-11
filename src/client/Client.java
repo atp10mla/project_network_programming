@@ -23,7 +23,8 @@ public class Client {
 		
 		Socket socket = null; 
 		try {
-			socket = new Socket("localhost", 10000);
+			socket = new Socket("192.168.0.17", 5000);
+			//socket = new Socket("localhost", 5000);
 		} catch (UnknownHostException e) {
 			System.out.println("Unknown host");
 			System.exit(0);

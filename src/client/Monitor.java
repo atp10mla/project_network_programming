@@ -16,7 +16,7 @@ public class Monitor {
 	
 	
 	public synchronized int getNextCommando() {
-		while(commandos.size() != 0) {
+		while(commandos.size() == 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -47,6 +47,8 @@ public class Monitor {
 	
 	public synchronized void addNextCard(Card card) {
 		nextCard = card;
+		System.out.println(card);
+		commandos.add(Protocol.SEND_CARD);
 		notifyAll();
 	}
 

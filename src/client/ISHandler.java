@@ -22,22 +22,30 @@ public class ISHandler extends Thread{
 				int cmd = is.read();
 				switch(cmd) {
 				case Protocol.YOUR_TURN:
+
+					System.out.println("YOUR TURN");
 					gui.choiceNextCard();
 					break;
 				case Protocol.PLAYED_CARD:
-					Card card = new Card(is.read(),is.read());
+
+					System.out.println("PLAYED CARD");
 					int player = is.read();
+					Card card = new Card(is.read(),is.read());
 					gui.addNextPlayedCard(card, player);
 					break;
 				case Protocol.NEW_ROUND:
+					System.out.println("Start new round");
 					gui.cleanHand();
 					int nbrOfCards = is.read();
+					System.out.println("nbr of cards "+nbrOfCards);
 					for(int i = 0;i < nbrOfCards;i++) {
 						card = new Card(is.read(),is.read());
 						gui.addCardToHand(card);
 					}
+					gui.finishDealing();
 					break;
 				case Protocol.SET_TRUMF:				
+					System.out.println("get trumf");
 					gui.setTrumf(new Card(is.read(),is.read()));
 					
 					//monitor.setTrumf(new Card(is.read(),is.read()));
@@ -48,13 +56,16 @@ public class ISHandler extends Thread{
 					//monitor.addStick(is.read()); 
 					break;
 				case Protocol.SET_WANTED_STICKS:
-	
+
+					System.out.println("SET WANTED STICKS");
 					gui.setWantedSticks(is.read(),is.read());
 					// set stick to player in GUI.
 					
 					//monitor.addWantedSticks(player,is.read());
 					break;
 				case Protocol.ROUND_SCORE:
+					
+					System.out.println("ROUND SCORE");
 					int nbrOfPlayers = is.read();
 					for(int i = 1;i<=nbrOfPlayers;i++) {
 						int score = is.read();
@@ -66,6 +77,7 @@ public class ISHandler extends Thread{
 					//monitor.updateScore();
 					break;
 				case Protocol.NEW_GAME:
+					System.out.println("Start new game...");
 					int id = is.read();
 					nbrOfPlayers = is.read();
 					gui.newGame(id, nbrOfPlayers);
