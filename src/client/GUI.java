@@ -2,7 +2,6 @@ package client;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -11,9 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+
+import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor.SetterOnlyReflection;
 
 import protocol.Card;
 
@@ -37,6 +36,7 @@ public class GUI extends JFrame{
 	private JLabel takenSticks[];
 
 	private int nbrOfRounds = 3;
+	private int sticksInRound = nbrOfRounds;
 
 	private JPanel panelTakenSticks;
 
@@ -45,6 +45,7 @@ public class GUI extends JFrame{
 	private JPanel trumfPanel;
 
 	private JPanel panelScoreBoard;
+
 
 	private JLabel[][] scoreBoard;
 
@@ -67,9 +68,11 @@ public class GUI extends JFrame{
 	private JSpinner spinner;
 	private JButton sendSticks;
 
-	private int wantedSticks= -1;
+	private int playersSetSticks;
 
 	private int totalSticks;
+
+	private int dir = -1;
 	public GUI(Monitor monitor) {
 		setTitle("Plump");
 		setSize(1366,768); // default size is 0,0
@@ -111,7 +114,7 @@ public class GUI extends JFrame{
 	}
 	public void addStick(int playerId) {
 		System.out.println("Player: "+playerId+" get one stick");
-		
+
 		takenSticks[playerId-1].setText(""+(Integer.parseInt(takenSticks[playerId-1].getText())+1));
 		middleCards.removeAll();
 		revalidate();
@@ -120,7 +123,7 @@ public class GUI extends JFrame{
 
 	public void setWantedSticks(int playerId, int sticks) {
 		totalSticks += sticks;
-
+		playersSetSticks++;
 		System.out.println("Player: "+playerId+" wants: "+sticks);
 
 		scoreBoard[roundNbr][playerId].setText(sticks+"");
@@ -196,10 +199,12 @@ public class GUI extends JFrame{
 		nbrOfDiamonds = 0;
 		nbrOfClubs = 0;
 		 */
+		totalSticks = 0;
+		playersSetSticks = 0;
 		for(int i = 0;i<takenSticks.length;i++) {
 			takenSticks[i].setText("0");
 		}
-		
+
 		roundNbr++;
 		currentHand.clear();
 		myCards.removeAll();
@@ -207,7 +212,7 @@ public class GUI extends JFrame{
 
 	}
 
-	public void newGame(int id, int nbrOfPlayers) {
+	public void newGame(int id, final int nbrOfPlayers) {
 
 		panelScoreBoard = new JPanel();
 		panelScoreBoard.setLayout(new GridLayout(nbrOfRounds*2+1,nbrOfPlayers+1));
@@ -270,18 +275,23 @@ public class GUI extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				System.out.println("Press button");
 				if(setSticks) {
-					System.out.println("in here");
-					setSticks = false;
+					
+					if(playersSetSticks == nbrOfPlayers-1 && (int)spinner.getValue() + totalSticks == sticksInRound) {
+						textMessage.setText("Total sticks +  your sticks = total sticks in the round. Error");
+						revalidate();
+						return;
+					}
 					Thread t = new Thread() {
 						public void run() {
+							setSticks = false;
 							System.out.println("count: "+ spinner.getValue());
 							monitor.addNumberOfSticks((int)spinner.getValue());
+							textMessage.setText("Wait for other players...");
+							revalidate();
 						}
 					};
 					t.start();		
-
 				}
 
 				// TODO Auto-generated method stub
@@ -289,7 +299,8 @@ public class GUI extends JFrame{
 
 			}
 		});
-		spinner = new JSpinner( new SpinnerNumberModel( 1,1,nbrOfRounds,1 ) );
+		spinner = new JSpinner( new SpinnerNumberModel( 1,0,nbrOfRounds,1 ) );
+
 		sticks.add(spinner);
 		sticks.add(sendSticks);
 		sticks.add(textMessage);
@@ -304,7 +315,7 @@ public class GUI extends JFrame{
 					//panelTakenSticks.add()
 					System.out.println("add player"+i);
 					panelTakenSticks.add(new JLabel("Player "+i));
-					
+
 				} else {
 					takenSticks[i] = new JLabel("0");
 					panelTakenSticks.add(takenSticks[i]);
@@ -481,6 +492,15 @@ public class GUI extends JFrame{
 		System.out.println("Player: "+playerId+" . Score: "+score);
 		scoreBoard[roundNbr][playerId].setText(score+"");
 		revalidate();
+		if(dir == -1) {
+			if(sticksInRound != 1) {
+				sticksInRound--;
+			} else {
+				dir = 1;
+			}
+		} else {
+			sticksInRound++;
+		}
 
 	}
 

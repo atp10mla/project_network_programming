@@ -40,6 +40,8 @@ public class OSHandler extends Thread{
 					int nbrOfSticks = monitor.getNumberOfSticks();
 					os.write(Protocol.SET_STICKS);
 					os.write(nbrOfSticks);
+					os.flush();
+					System.out.println("GO HERE!");
 					break;
 				}
 			}
