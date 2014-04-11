@@ -22,29 +22,26 @@ public class OSHandler extends Thread{
 				System.out.println("Next commande sended!: "+cmd);
 				switch(cmd) {
 				case Protocol.SEND_CARD: // Send next card.
-					System.out.println("Skickar mitt kort till servern");
+					System.out.println("SEND SEND CARD");
 					Card card = monitor.getNextCard();
-					System.out.println(card.getSuit()+" "+card.getValue());
-
 					os.write(Protocol.SEND_CARD);
 					os.write(card.getSuit());
 					os.write(card.getValue());	
 					break;
 				case Protocol.GET_DELAY:
+					System.out.println("SEND GET DELAY");
 					os.write(Protocol.GET_DELAY);
 					break;
 				case Protocol.SET_STICKS:
-					
-					
-					System.out.println("Sä");
+					System.out.println("SEND SET STICKS");
 					int nbrOfSticks = monitor.getNumberOfSticks();
 					os.write(Protocol.SET_STICKS);
 					os.write(nbrOfSticks);
+					os.flush();
 					break;
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 		}
 	}
 }

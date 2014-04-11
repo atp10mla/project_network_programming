@@ -1,6 +1,5 @@
 package client;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,17 +7,13 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
-// danne kommenterar :3 #iknoweverything #elitehaxx3r <=> SÄMST
 public class Client {	
 	
 	public static void main(String[]args) {
 		Monitor monitor = new Monitor();
-		
 		GUI gui = new GUI(monitor);
 		gui.setVisible(true);
-		
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
 		
 		Socket socket = null; 
@@ -43,9 +38,5 @@ public class Client {
 		}
 		new OSHandler(os, monitor).start();
 		new ISHandler(is, gui).start();
-		
-		
-		
 	}
-
 }

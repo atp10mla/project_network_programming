@@ -1,7 +1,5 @@
 package client;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import protocol.Card;
@@ -11,10 +9,8 @@ public class Monitor {
 	private LinkedList<Integer> commandos = new LinkedList<Integer>();
 	
 	private Card nextCard;
-	private int nbrOfSticks;
-	
-	
-	
+	private int nbrOfSticks;	
+
 	public synchronized int getNextCommando() {
 		while(commandos.size() == 0) {
 			try {
@@ -61,7 +57,8 @@ public class Monitor {
 		// TODO Auto-generated method stub
 		this.nbrOfSticks = nbrOfSticks;
 		commandos.addLast(Protocol.SET_STICKS);
-		
+		System.out.println("in monitor!");
+		notifyAll();
 	}
 	
 	
