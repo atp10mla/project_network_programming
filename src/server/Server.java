@@ -15,6 +15,7 @@ public class Server {
 		int currPlayer = 1;
 		
 		try {
+			System.out.println("Server starting...");
 			server = new ServerSocket(5000);
 		} catch (IOException e) {
 			System.out.println("Could not set up server");
@@ -27,6 +28,7 @@ public class Server {
 			Socket socket = null;
 			try {
 				socket = server.accept();
+				System.out.println(socket.getInetAddress().getHostName() + " connected.");
 				if(firstTime) {
 					timeFirstPlayerConnected = System.currentTimeMillis();
 					new StartGun(monitor).start();
@@ -40,9 +42,9 @@ public class Server {
 			if((System.currentTimeMillis()-timeFirstPlayerConnected) < TIME_TO_CONNECT) {
 				try {
 					Player p = new Player(socket.getOutputStream(), "Dummy", currPlayer++);
+					
 					new InputHandler(socket.getInputStream(), monitor, p).start();
 					new OutputHandler(socket.getOutputStream(), monitor, p).start();
-					monitor.addPlayer(p);
 				} catch (IOException e) {
 					System.out.println("Error when client connecting");
 					System.exit(1);
