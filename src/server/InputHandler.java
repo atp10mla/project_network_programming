@@ -19,20 +19,16 @@ public class InputHandler extends Thread {
 	
 	public void run() {
 		while(true) {
-			int com = 0;
-			try {
-				com = is.read();
-				System.out.println("Read : " + com + " from player " + p.getId());
-			} catch (IOException e) {
-				System.out.println("Could not read from is");
-				System.exit(1);
-			}
+			int com = readOneCommand(is);
+			System.out.println("Read : " + com + " from player " + p.getId());
 			
 			switch (com) {
 			case Protocol.SEND_CARD: { // 1
 				int suit = readOneCommand(is);
 				int value = readOneCommand(is);
+				System.out.println("Read card: suit = " + suit + " value = " + value);
 				monitor.sendPlayedCard(new Card(suit, value, p));
+				break;
 			}
 			case Protocol.SET_STICKS:
 				monitor.setWantedSticks(readOneCommand(is), p);
@@ -42,7 +38,7 @@ public class InputHandler extends Thread {
 				break;
 			}
 			default: {
-				// some error
+				System.out.println(" -- unexpected input");
 			}
 			}
 			

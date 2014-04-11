@@ -23,8 +23,8 @@ public class Monitor {
 	private boolean gameIsRunning = false;
 
 	public Monitor() {
-		for(int i=1; i<14; i++)
-			for(int j=1; j<5; j++)
+		for(int i=1; i<5; i++)
+			for(int j=1; j<14; j++)
 				deck.add(new Card(i,j));
 		shuffle();
 	}
@@ -79,14 +79,14 @@ public class Monitor {
 		currentStickCards.add(card);
 		if(currentStickCards.size() == party.size()) {
 			getStickWinner();
-			globalSticks++;
+			System.out.println(globalSticks++);
+			// fix wanted sticks stuff
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		} else {
 			stickStarter = getPlayerWithId((stickStarter.getId()+1) % (party.size() + 1));
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		}
 //		stickWinner.addStick();
-		globalSticks++;
 		if(globalSticks == currentRound) {
 			handleRoundEnd();
 		}

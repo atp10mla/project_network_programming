@@ -42,7 +42,7 @@ public class OutputHandler extends Thread {
 				System.out.println("Send ROUND_SCORE to player " + p.getId());
 				int iter;
 				writeCommandAndData((iter = monitor.getNumberOfPlayers()));
-				for(int id=1; id<=iter; id++) {
+				for(int id=1; id<iter; id++) {
 					writeCommandAndData(monitor.getScoreOfPlayer(id));
 				}
 				break;
@@ -63,6 +63,7 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.SET_WANTED_STICKS:
 				writeCommandAndData(Protocol.SET_WANTED_STICKS);
+				System.out.println("Send SET_WANTED_STICKS to player " + p.getId());
 				Player tempPlayer = monitor.getCurrentSticker();
 				writeCommandAndData(tempPlayer.getId());
 				writeCommandAndData(tempPlayer.getWantedSticks());
