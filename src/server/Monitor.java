@@ -78,13 +78,13 @@ public class Monitor {
 		}
 		currentStickCards.add(card);
 		if(currentStickCards.size() == party.size()) {
+			globalSticks++;
 			getStickWinner();
-			System.out.println(globalSticks++);
 			// fix wanted sticks stuff
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		} else {
-			stickStarter = getPlayerWithId((stickStarter.getId()+1) % (party.size() + 1));
-			commands.get(stickStarter).add(Protocol.YOUR_TURN);
+			stickStarter = getPlayerWithId((stickStarter.getId()) % (party.size()) + 1);
+			commands.get(stickStarter).add(Protocol.YOUR_TURN);		
 		}
 //		stickWinner.addStick();
 		if(globalSticks == currentRound) {
