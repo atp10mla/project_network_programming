@@ -65,6 +65,7 @@ public class Monitor {
 			}
 		}
 		startGame();
+		startNewRound();
 	}
 
 	// main function, really
@@ -103,6 +104,7 @@ public class Monitor {
 			System.exit(0);
 		}
 		currentRound--;
+		startNewRound();
 	}
 
 	public synchronized void getStickWinner() {
