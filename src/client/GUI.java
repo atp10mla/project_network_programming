@@ -1,21 +1,25 @@
 package client;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import protocol.Card;
 
@@ -25,10 +29,15 @@ public class GUI extends JFrame{
 
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
 
+	private boolean setSticks = false;
+	
 	private JPanel myCards;
 	private JPanel middleCards;
 	private JPanel trumfPanel;
 
+	private JPanel panelScoreBoard;
+
+	private JLabel[][] scoreBoard;
 
 	private boolean choiceCard = true;
 
@@ -43,14 +52,25 @@ public class GUI extends JFrame{
 	private int nbrOfPlayedCards;
 
 	private Card trumf;
+	
+	private int roundNbr;
 
+	private JSpinner spinner;
+	private JButton sendSticks;
+	
+	private int wantedSticks= -1;
+	
 	private int totalSticks;
 	public GUI(Monitor monitor) {
 		setTitle("Plump");
 		setSize(1366,768); // default size is 0,0
 		setLayout(new BorderLayout());
 		this.monitor = monitor;
+		/*
 		newGame(2, 5);
+		cleanHand();
+		setWantedSticks(2, 3);
+		setScore(13, 1);
 		addCardToHand(new Card(2,4));
 		addCardToHand(new Card(6,2));
 		addCardToHand(new Card(3,3));
@@ -60,14 +80,14 @@ public class GUI extends JFrame{
 		addNextPlayedCard(new Card(3,3),1);
 
 		addNextPlayedCard(new Card(3,2),2);
-		
+
 		choiceNextCard();
 		setTrumf(new Card(5,3));
-	
+		*/
 		//getContentPane().add(myCards,BorderLayout.NORTH);
 		//panel.add(null,BorderLayout.CENTER);
 		//panel.add(new JLabel("Example"), BorderLayout.EAST);
-		
+
 	}
 
 	public void setTrumf(Card card) {
@@ -95,8 +115,11 @@ public class GUI extends JFrame{
 
 	public void setWantedSticks(int playerId, int sticks) {
 		totalSticks += sticks;
+		
 		System.out.println("Player: "+playerId+" wants: "+sticks);
 
+		scoreBoard[roundNbr][playerId].setText(sticks+"");
+		revalidate();
 		// update GUI . with wanted sticks for player.
 
 	}
@@ -127,7 +150,7 @@ public class GUI extends JFrame{
 		label.addMouseListener(new CardListener(card,label));
 		label.setHorizontalAlignment(JLabel.CENTER);
 		myCards.add(label);
-		
+
 		getContentPane().add(myCards,BorderLayout.SOUTH);
 
 
@@ -171,22 +194,62 @@ public class GUI extends JFrame{
 		nbrOfDiamonds = 0;
 		nbrOfClubs = 0;
 		 */
+		roundNbr++;
 		currentHand.clear();
 		myCards.removeAll();
 
 	}
 
 	public void newGame(int id, int nbrOfPlayers) {
-		myCards = new JPanel();
+
+		panelScoreBoard = new JPanel();
+		panelScoreBoard.setLayout(new GridLayout(21,nbrOfPlayers+1));
+		scoreBoard =  new JLabel[21][nbrOfPlayers+1];
+		for(int i = 0;i<21;i++) {
+			for(int j=0;j<=nbrOfPlayers;j++){
+				if(j==0) {
+					if(i!=0) {
+						if(i<=10) {
+							scoreBoard[i][j] = new JLabel(""+(11-i));
+						} else {
+							scoreBoard[i][j] = new JLabel(""+(i-10));	
+						}
+					} else {
+						scoreBoard[i][j] = new JLabel("");
+					}
+
+				} else {
+					if(i==0) {
+						if(id==j) {
+							scoreBoard[i][j] = new JLabel(""+j +"(you) ");
+						} else {
+							scoreBoard[i][j] = new JLabel(""+j);
+						}
+					} else {
+						scoreBoard[i][j] = new JLabel("");
+					}
+
+
+				}
+
+				panelScoreBoard.add(scoreBoard[i][j]);
+			}
+		}
+		getContentPane().add(panelScoreBoard,BorderLayout.EAST);
+		revalidate();
+
+		roundNbr = 0;
 		
+		myCards = new JPanel();
+
 		myCards.setLayout(new FlowLayout());
 		myCards.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		middleCards = new JPanel();
 		middleCards.setLayout(new GridBagLayout());
 		middleCards.setAlignmentX(CENTER_ALIGNMENT);
 		middleCards.setAlignmentY(CENTER_ALIGNMENT);
-		
+
 		trumfPanel = new JPanel();
 		trumfPanel.setLayout(new GridLayout(1,1));
 
@@ -194,6 +257,35 @@ public class GUI extends JFrame{
 		myId = id;
 		this.nbrOfPlayers = nbrOfPlayers;
 		nbrOfPlayedCards = nbrOfPlayers;
+	
+		JPanel sticks = new JPanel();
+		sendSticks = new JButton("Send sticks");
+		sendSticks.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if(setSticks) {
+					setSticks = false;
+					Thread t = new Thread() {
+						public void run() {
+							monitor.addNumberOfSticks(spinner.getComponentCount());
+						}
+					};
+					t.start();		
+					
+				}
+				
+				// TODO Auto-generated method stub
+				//if(event.)
+				
+			}
+		});
+		spinner = new JSpinner( new SpinnerNumberModel( 1,1,10,1 ) );
+	    sticks.add(spinner);
+	    sticks.add(sendSticks);
+	    getContentPane().add(sticks,BorderLayout.NORTH);
+	    
+		
 		// write gameplan in gui
 
 		// TODO Auto-generated method stub
@@ -242,7 +334,7 @@ public class GUI extends JFrame{
 	}
 
 	private ImageIcon createTrumfCard(Card card) {			
-		return createImageIcon(parseCardToPngString(card), 40,60);
+		return createImageIcon(parseCardToPngString(card), 60,90);
 	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
@@ -270,7 +362,7 @@ public class GUI extends JFrame{
 
 					Thread t = new Thread() {
 						public void run() {
-							
+
 							monitor.addNextCard(card);
 						}
 					};
@@ -340,22 +432,20 @@ public class GUI extends JFrame{
 		// Ask for sticks and send to monitor with Thread...
 		// monitor.
 		// TODO Auto-generated method stub
-		Scanner s = new Scanner(System.in);
-		final int nbr = s.nextInt();
-		Thread t = new Thread() {
-			public void run() {
-				monitor.addNumberOfSticks(nbr);
-			}
-		};
-		t.start();		
-
 		
+	//sendSticks.
+		setSticks = true;
+		
+
 	}
 
 	public void setScore(int score, int playerId) {
 		// TODO Auto-generated method stub
 		System.out.println("Player: "+playerId+" . Score: "+score);
 
+		scoreBoard[roundNbr][playerId].setText(score+"");
+		revalidate();
+		
 	}
 
 }

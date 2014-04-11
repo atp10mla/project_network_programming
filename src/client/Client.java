@@ -20,7 +20,7 @@ public class Client {
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
-		/*
+		
 		Socket socket = null; 
 		try {
 			socket = new Socket("localhost", 10000);
@@ -40,11 +40,10 @@ public class Client {
 			System.out.println("Fail to open output/input stream.");
 			System.exit(0);
 		}
-		Monitor monitor = new Monitor();
 		new OSHandler(os, monitor).start();
 		new ISHandler(is, gui).start();
 		
-		*/
+		
 		
 	}
 
