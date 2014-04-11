@@ -48,6 +48,7 @@ public class Monitor {
 			commands.get(p).add(Protocol.NEW_ROUND);
 			commands.get(p).add(Protocol.SET_TRUMF);
 		}
+		
 		fixWantedSticks();
 		// fix wanted sticks
 		commands.get(roundStarter).add(Protocol.YOUR_TURN);
@@ -60,11 +61,33 @@ public class Monitor {
 		return p.getId() % size + 1;
 	}
 	public synchronized void fixWantedSticks() {
-
-		for(int i=stickStarter.getId(); i!=coolIndex(stickStarter, party.size()); i++) {
-			Player temp = getPlayerWithId(i);
+		int curr = stickStarter.getId();
+		int stop;
+		if(stickStarter.getId() == 1) {
+			stop = party.size();
+		} else {
+			stop = curr-1;
+		}
+		while(curr != stop) {
+			Player temp = getPlayerWithId(curr);
 			commands.get(temp).add(Protocol.SET_STICKS);
-			while(getPlayerWithId(coolIndex(temp, party.size())).getWantedSticks() == -1);
+			while(temp.getWantedSticks() == -1) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			curr = curr % party.size() + 1;
+		}
+		Player temp = getPlayerWithId(curr);
+		commands.get(temp).add(Protocol.SET_STICKS);
+		while(temp.getWantedSticks() == -1) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -231,6 +254,7 @@ public class Monitor {
 		for(Player player : party) {
 			commands.get(player).add(Protocol.SET_WANTED_STICKS);
 		}
+		notifyAll();
 	}
 	public Player getCurrentSticker() {
 		return currentStickSetter;

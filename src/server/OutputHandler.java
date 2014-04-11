@@ -21,7 +21,6 @@ public class OutputHandler extends Thread {
 		monitor.addPlayer(p);
 		while(true) {
 			int cmd = monitor.getNextCommando(p); 
-
 			switch(cmd) {
 			case Protocol.NEW_GAME:
 				makeNewGame();
