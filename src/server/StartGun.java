@@ -9,6 +9,9 @@ public class StartGun extends Thread {
 		
 	public void run() {
 		monitor.waitForStart();
+		while(true) {
+			monitor.waitForNewRoundReady();
+		}
 	}
 	
 }

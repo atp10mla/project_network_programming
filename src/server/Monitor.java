@@ -21,6 +21,7 @@ public class Monitor {
 	private int globalSticks;
 	private Player stickWinner;
 	private boolean gameIsRunning = false;
+	private boolean readyToStartNewRound = false;
 
 	public Monitor() {
 		for(int i=1; i<5; i++)
@@ -56,7 +57,9 @@ public class Monitor {
 		fixWantedSticks();
 		
 		commands.get(roundStarter).add(Protocol.YOUR_TURN);
+		
 		stickStarter = stickWinner;
+		
 		roundStarter = getPlayerWithId(coolIndex(roundStarter,party.size()));
 		notifyAll();
 	}
@@ -65,9 +68,9 @@ public class Monitor {
 		return p.getId() % size + 1;
 	}
 	public synchronized void fixWantedSticks() {
-		int curr = stickStarter.getId();
+		int curr = roundStarter.getId();
 		int stop;
-		if(stickStarter.getId() == 1) {
+		if(curr == 1) {
 			stop = party.size();
 		} else {
 			stop = curr-1;
@@ -166,17 +169,17 @@ public class Monitor {
 			// send ultimate winner
 			return;
 		}
-		if(firstRoundOne && currentRound == 1) {
-			firstRoundOne = false;
-			currentRound = 1;
-		}
-		if(!firstRoundOne && currentRound == 0) {
+		if(!firstRoundOne) {
 			currentRound = 1;
 			direction = -1;
 		}
-		System.out.println("Starting new round");
+		if(firstRoundOne && currentRound == 1) {
+			firstRoundOne = false;
+		}
+		System.out.println("Starting new round" + currentRound);
+		
+		readyToStartNewRound = true;
 		notifyAll();
-		startNewRound();
 	}
 
 	
@@ -263,5 +266,16 @@ public class Monitor {
 	}
 	public Player getCurrentSticker() {
 		return currentStickSetter;
+	}
+	public synchronized void waitForNewRoundReady() {
+		while(!readyToStartNewRound) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		readyToStartNewRound = false;
+		startNewRound();
 	}
 }
