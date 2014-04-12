@@ -15,9 +15,10 @@ public class Client {
 		gui.setVisible(true);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
-		/*
+	
 		Socket socket = null; 
 		try {
+			
 			socket = new Socket("localhost", 5000);
 			//socket = new Socket("localhost", 5000);
 		} catch (UnknownHostException e) {
@@ -25,7 +26,7 @@ public class Client {
 			System.exit(0);
 		} catch (IOException e) {
 			System.out.println("Could not connect to server.");
-			System.exit(0);
+			//System.exit(0);
 		}
 		InputStream is = null;
 		OutputStream os = null;
@@ -38,6 +39,6 @@ public class Client {
 		}
 		new OSHandler(os, monitor).start();
 		new ISHandler(is, gui).start();
-	*/
+	
 	}
 }

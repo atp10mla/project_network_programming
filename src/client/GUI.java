@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import protocol.Card;
@@ -32,6 +33,8 @@ public class GUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
+	private JLabel labelWait;
+	
 	// Current cards on hand
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
 
@@ -93,6 +96,15 @@ public class GUI extends JFrame{
 		setSize(800,600); // default size is 0,0
 		setLayout(new BorderLayout());
 		this.monitor = monitor;
+		labelWait = new JLabel("Wait for players..");
+		getContentPane().add(labelWait);
+		labelWait.setHorizontalAlignment(SwingConstants.CENTER);
+		labelWait.setVerticalAlignment(SwingConstants.CENTER);
+		getContentPane().add(labelWait);		
+		TimerThread waitThread = new TimerThread(60*1000*2, labelWait); 
+		waitThread.setTextBefore(labelWait.getText());
+		waitThread.start();
+		/*
 		newGame(1, 2);
 		cleanHand();
 		setWantedSticks(2, 3);
@@ -112,7 +124,7 @@ public class GUI extends JFrame{
 		choiceNextCard();
 		setTrumf(new Card(3,5));
 
-		
+		*/
 		//getContentPane().add(myCards,BorderLayout.NORTH);
 		//panel.add(null,BorderLayout.CENTER);
 		//panel.add(new JLabel("Example"), BorderLayout.EAST);
@@ -243,6 +255,7 @@ public class GUI extends JFrame{
 	 * @param nbrOfPlayers Number of players
 	 */
 	public void newGame(int id, final int nbrOfPlayers) {
+		this.remove(labelWait);
 		this.nbrOfPlayers = nbrOfPlayers;
 		createScoreBoard(id);
 		createUpperLayout();

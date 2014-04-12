@@ -1,9 +1,14 @@
 package client;
 
+import javax.swing.JLabel;
+
 public class TimerThread extends Thread{
 	private long time;
-	public TimerThread(long time) {
+	private JLabel label;
+	private String textBefore = "";
+	public TimerThread(long time, JLabel label) {
 		this.time = time;
+		this.label = label;
 	}
 	
 	public void run() {
@@ -11,6 +16,7 @@ public class TimerThread extends Thread{
 		long startTime = System.currentTimeMillis();
 		long end = startTime + time;
 		while(System.currentTimeMillis()<end) {
+			label.setText(textBefore+(time-tick)/1000);
 			tick+=1000;
 			try {
 				sleep(1000-(System.currentTimeMillis()-(startTime+tick)));
@@ -22,5 +28,10 @@ public class TimerThread extends Thread{
 			// write to GUI...
 		}
 		
+		
+	}
+	
+	public void setTextBefore(String text) {
+		textBefore = text;
 	}
 }
