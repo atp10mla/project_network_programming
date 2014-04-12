@@ -18,7 +18,6 @@ public class Client {
 	
 		Socket socket = null; 
 		try {
-			
 			socket = new Socket("localhost", 5000);
 			//socket = new Socket("localhost", 5000);
 		} catch (UnknownHostException e) {
