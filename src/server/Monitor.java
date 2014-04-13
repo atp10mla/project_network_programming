@@ -120,6 +120,7 @@ public class Monitor {
 			commands.get(p).add(Protocol.PLAYED_CARD);
 		}
 		currentStickCards.add(card);
+		System.out.println("curr stick cards = " + currentStickCards.size() + " party size = " + party.size());
 		if(currentStickCards.size() == party.size()) {
 			getStickWinner();
 		} else {
@@ -149,6 +150,7 @@ public class Monitor {
 		System.out.println("Round " + currentRound + " stick " + globalSticks + " was won by player " + stickWinner.getId());
 		stickStarter = stickWinner;
 		stickWinner.addStick();
+		System.out.println("globalSticks = " + globalSticks + " currentRound = " + currentRound);
 		if(globalSticks != currentRound) {
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		}
