@@ -30,7 +30,7 @@ public class OutputHandler extends Thread {
 				break;
 			case Protocol.PLAYED_CARD:
 				Card c = monitor.getNextPlayedCard(p);
-//				System.out.println("Send PLAYED_CARD to player " + p.getId());
+				System.out.println("Send PLAYED_CARD to player " + p.getId());
 				writeCommandAndData(Protocol.PLAYED_CARD);
 				writeCommandAndData(c.getOwner().getId());
 				writeCommandAndData(c.getSuit());
