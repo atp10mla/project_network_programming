@@ -104,7 +104,7 @@ public class GUI extends JFrame{
 		setSize(800,600); // default size is 0,0
 		setLayout(new BorderLayout());
 		this.monitor = monitor;
-		labelWait = new JLabel("Wait for players..");
+		labelWait = new JLabel("Wait for players: ");
 
 		labelWait.setHorizontalAlignment(SwingConstants.CENTER);
 		labelWait.setVerticalAlignment(SwingConstants.CENTER);
@@ -600,12 +600,12 @@ public class GUI extends JFrame{
 
 	public void choiceNextCard() {
 		choiceCard = true;
+		textMessage.setText("Choice next card: ");
 		nextCardThread = new TimerThread(15*1000,textMessage,this);
 		nextCardThread.setTextBefore(textMessage.getText());
 		nextCardThread.setActionOnFinish(2);
 		nextCardThread.start();
 		// start timer here and put text.
-		textMessage.setText("Choice next card: ");
 		revalidate();
 
 	}
