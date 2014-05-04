@@ -163,8 +163,13 @@ public class Monitor {
 		}
 		globalSticks = 0;
 		System.out.println("Current round has ended: " + currentRound);
+<<<<<<< HEAD
 		currentRound -= direction;
 		if(currentRound == 4) {
+=======
+		currentRound = currentRound - direction;
+		if(currentRound == 4) { //TODO dont hard code 4
+>>>>>>> dff8f5ebef1181d8a1ec6b6aec4feef3786f4f9b
 			System.out.println("Game is over.");
 			//			System.exit(0);
 			// send ultimate winner
