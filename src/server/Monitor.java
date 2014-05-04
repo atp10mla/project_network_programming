@@ -157,26 +157,21 @@ public class Monitor {
 	}
 	
 	private int direction = 1;
-	private boolean firstRoundOne = true;
 	private synchronized void handleRoundEnd() {
 		for(Player p : party) {
 			commands.get(p).add(Protocol.ROUND_SCORE);
 		}
 		globalSticks = 0;
 		System.out.println("Current round has ended: " + currentRound);
-		currentRound = currentRound - direction;
+		currentRound -= direction;
 		if(currentRound == 4) {
 			System.out.println("Game is over.");
 			//			System.exit(0);
 			// send ultimate winner
 			return;
 		}
-		if(!firstRoundOne) {
-			currentRound = 1;
+		if(currentRound == 1) {
 			direction = -1;
-		}
-		if(firstRoundOne && currentRound == 1) {
-			firstRoundOne = false;
 		}
 		System.out.println("Starting new round" + currentRound);
 		
