@@ -9,7 +9,7 @@ import protocol.Protocol;
 public class Server {
 	
 	public static void main(String[]args) {
-		final long TIME_TO_CONNECT = 1000*2*60;
+		final long TIME_TO_CONNECT = 1000*2*60; // 2min
 		ServerSocket server = null;
 		Monitor monitor = new Monitor();
 		int currPlayer = 1;

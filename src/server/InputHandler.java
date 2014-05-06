@@ -31,6 +31,7 @@ public class InputHandler extends Thread {
 				break;
 			}
 			case Protocol.SET_STICKS:
+				
 				monitor.setWantedSticks(readOneCommand(is), p);
 				break;
 			case Protocol.GET_DELAY: {

@@ -20,6 +20,7 @@ public class Monitor {
 	private int currentRound = 3;
 	private int globalSticks;
 	private Player stickWinner;
+	private int maxNbrOfPlayers = 2;
 	private boolean gameIsRunning = false;
 	private boolean readyToStartNewRound = false;
 
@@ -42,50 +43,68 @@ public class Monitor {
 		return commands.get(p).pop();
 	}
 
+	/**
+	 * New round (new cards)
+	 */
 	public synchronized void startNewRound() {
 		for(Player p : party) {
 			p.setWantedSticks(-1);
 		}
+		// shuffle the cards.
 		shuffle();
+		// set trumf for the round
 		trumf = getNextCard();
+		
 		for(Player p : party) {
 			commands.get(p).add(Protocol.NEW_ROUND);
 			commands.get(p).add(Protocol.SET_TRUMF);
-			notifyAll();
 		}
+		notifyAll();
 		
 		fixWantedSticks();
 		
 		commands.get(roundStarter).add(Protocol.YOUR_TURN);
 		
-		stickStarter = stickWinner;
+		stickStarter = stickWinner; // TODO why?
 		
-		roundStarter = getPlayerWithId(coolIndex(roundStarter,party.size()));
+		//set roundstart for next round.
+		roundStarter = getPlayerWithId(getNextPlayer(roundStarter,party.size()));
 		notifyAll();
 	}
 
-	private int coolIndex(Player p, int size) {
+	private int getNextPlayer(Player p, int size) {
 		return p.getId() % size + 1;
 	}
+
+	/**
+	 * Ask every player for number of sticks..
+	 */
 	public synchronized void fixWantedSticks() {
 		int curr = roundStarter.getId();
+		
+		// fix where to stop
 		int stop;
 		if(curr == 1) {
 			stop = party.size();
 		} else {
 			stop = curr-1;
 		}
+		
 		while(curr != stop) {
 			Player temp = getPlayerWithId(curr);
 			commands.get(temp).add(Protocol.SET_STICKS);
+			notifyAll();
 			while(temp.getWantedSticks() == -1) {
 				try {
 					wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				System.out.println(temp.getWantedSticks());
 			}
+			
 			curr = curr % party.size() + 1;
+			System.out.println(curr);
 		}
 		Player temp = getPlayerWithId(curr);
 		commands.get(temp).add(Protocol.SET_STICKS);
@@ -98,9 +117,12 @@ public class Monitor {
 		}
 	}
 
+	/**
+	 * Used by startGun to start the game. 
+	 */
 	public synchronized void waitForStart() {
 		long startTime = System.currentTimeMillis();
-		while(party.size()<2 && (System.currentTimeMillis()-startTime)<(1000*2*60)) {
+		while(party.size()<maxNbrOfPlayers && (System.currentTimeMillis()-startTime)<(1000*2*60)) {
 			try {
 				wait(1000*2*60);
 			} catch (InterruptedException e) {
@@ -124,7 +146,7 @@ public class Monitor {
 		if(currentStickCards.size() == party.size()) {
 			getStickWinner();
 		} else {
-			stickStarter = getPlayerWithId(coolIndex(stickStarter,party.size()));
+			stickStarter = getPlayerWithId(getNextPlayer(stickStarter,party.size()));
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);		
 		}
 		if(globalSticks == currentRound) {
@@ -215,6 +237,10 @@ public class Monitor {
 	public Card getTrumf() {
 		return trumf;
 	}
+	
+	/**
+	 * Add command NEW_GAME to all players. 
+	 */
 	public synchronized void startGame() {
 		gameIsRunning = true;
 		for(Player p : party) {
@@ -252,15 +278,20 @@ public class Monitor {
 	public synchronized Card getNextCard() {
 		return deck.get(cardPosition++);
 	}
+	
 	private Player currentStickSetter;
+	
+	// TODO ska du inte låta nästa spelare sätta antalet stick här?
 	public synchronized void setWantedSticks(int nbrOfSticks, Player p) {
 		p.setWantedSticks(nbrOfSticks);
 		currentStickSetter = p;
+		System.out.println("set: "+nbrOfSticks+"to player: "+p.getId());
 		for(Player player : party) {
 			commands.get(player).add(Protocol.SET_WANTED_STICKS);
 		}
 		notifyAll();
 	}
+	
 	public Player getCurrentSticker() {
 		return currentStickSetter;
 	}
