@@ -62,10 +62,10 @@ public class Monitor {
 		notifyAll();
 		
 		fixWantedSticks();
-		
+		stickStarter = stickWinner; // TODO why?
 		commands.get(roundStarter).add(Protocol.YOUR_TURN);
 		
-		stickStarter = stickWinner; // TODO why?
+		
 		
 		//set roundstart for next round.
 		roundStarter = getPlayerWithId(getNextPlayer(roundStarter,party.size()));
@@ -108,6 +108,7 @@ public class Monitor {
 		}
 		Player temp = getPlayerWithId(curr);
 		commands.get(temp).add(Protocol.SET_STICKS);
+		notifyAll();
 		while(temp.getWantedSticks() == -1) {
 			try {
 				wait();
@@ -141,6 +142,7 @@ public class Monitor {
 			playedCards.get(p).add(card);
 			commands.get(p).add(Protocol.PLAYED_CARD);
 		}
+		notifyAll();
 		currentStickCards.add(card);
 		System.out.println("curr stick cards = " + currentStickCards.size() + " party size = " + party.size());
 		if(currentStickCards.size() == party.size()) {
@@ -281,7 +283,7 @@ public class Monitor {
 	
 	private Player currentStickSetter;
 	
-	// TODO ska du inte låta nästa spelare sätta antalet stick här?
+	// TODO 
 	public synchronized void setWantedSticks(int nbrOfSticks, Player p) {
 		p.setWantedSticks(nbrOfSticks);
 		currentStickSetter = p;
