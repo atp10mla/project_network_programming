@@ -502,7 +502,7 @@ public class GUI extends JFrame{
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	private ImageIcon createImageIcon(String path, int width, int height) {
 		// TODO find correct folder
-		ImageIcon imgIcon = new ImageIcon("C:/Users/Markus/ProjectNetwork/Resources/"+path);
+		ImageIcon imgIcon = new ImageIcon("Resources/"+path);
 		Image img = imgIcon.getImage();
 		img = img.getScaledInstance( width, height,  java.awt.Image.SCALE_SMOOTH ) ;  
 		return new ImageIcon(img);
