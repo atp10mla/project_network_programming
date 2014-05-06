@@ -22,7 +22,8 @@ public class Monitor {
 	private Player stickWinner;
 	private boolean gameIsRunning = false;
 	private boolean readyToStartNewRound = false;
-
+	private final int totalAmountOfRounds = 3;
+	
 	public Monitor() {
 		for(int i=1; i<5; i++)
 			for(int j=2; j<=14; j++)
@@ -69,6 +70,7 @@ public class Monitor {
 	}
 	public synchronized void fixWantedSticks() {
 		int curr = roundStarter.getId();
+		System.out.println("TESTING THIS NOW " + curr);
 		int stop;
 		if(curr == 1) {
 			stop = party.size();
@@ -86,6 +88,7 @@ public class Monitor {
 				}
 			}
 			curr = curr % party.size() + 1;
+			System.out.println("TESTING THIS NOW " + curr);
 		}
 		Player temp = getPlayerWithId(curr);
 		commands.get(temp).add(Protocol.SET_STICKS);
@@ -164,7 +167,7 @@ public class Monitor {
 		globalSticks = 0;
 		System.out.println("Current round has ended: " + currentRound);
 		currentRound -= direction;
-		if(currentRound == 4) {
+		if(currentRound == totalAmountOfRounds + 1) {
 			System.out.println("Game is over.");
 			//			System.exit(0);
 			// send ultimate winner
@@ -197,6 +200,7 @@ public class Monitor {
 		playedCards.put(p, new LinkedList<Card>());
 		if(party.size() == 1) {
 			roundStarter = party.get(0);
+			System.out.println("CURRENT ROUNDSTARTER: "+roundStarter);
 			stickStarter = party.get(0);
 			stickWinner = party.get(0);
 		}
@@ -252,6 +256,7 @@ public class Monitor {
 	public synchronized Card getNextCard() {
 		return deck.get(cardPosition++);
 	}
+	
 	private Player currentStickSetter;
 	public synchronized void setWantedSticks(int nbrOfSticks, Player p) {
 		p.setWantedSticks(nbrOfSticks);
@@ -261,6 +266,7 @@ public class Monitor {
 		}
 		notifyAll();
 	}
+	
 	public Player getCurrentSticker() {
 		return currentStickSetter;
 	}

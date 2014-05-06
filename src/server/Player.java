@@ -29,12 +29,11 @@ public class Player {
 	public void addStick() {
 		sticks++;
 		if(sticks == wantedSticks) {
-			score = wantedSticks*10;
-		}
-		if(score == 0) {
-			score = 5;
-		}
-		if(sticks > wantedSticks || sticks < wantedSticks) {
+			score = wantedSticks+10;
+			if(score == 10) {
+				score = 5;
+			}
+		} else {
 			score = 0;
 		}
 	}
