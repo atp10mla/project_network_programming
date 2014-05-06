@@ -31,9 +31,7 @@ public class InputHandler extends Thread {
 				break;
 			}
 			case Protocol.SET_STICKS:
-				int temp = readOneCommand(is);
-				System.out.println("Stick wish : "+temp+" from player "+p.getId());
-				monitor.setWantedSticks(temp, p);
+				monitor.setWantedSticks(readOneCommand(is), p);
 				break;
 			case Protocol.GET_DELAY: {
 				monitor.sendCommando(Protocol.SEND_MORE_TIME);
