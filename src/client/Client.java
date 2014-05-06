@@ -15,7 +15,7 @@ public class Client {
 		gui.setVisible(true);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
-	
+	 
 		Socket socket = null; 
 		try {
 			socket = new Socket("localhost", 5000);
