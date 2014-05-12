@@ -56,20 +56,29 @@ public class Monitor {
 		// set trumf for the round
 		trumf = getNextCard();
 		
-		for(Player p : party) {
-			commands.get(p).add(Protocol.NEW_ROUND);
-			commands.get(p).add(Protocol.SET_TRUMF);
-		}
+		sendCommando(Protocol.NEW_ROUND);
+		sendCommando(Protocol.SET_TRUMF);
 		notifyAll();
 		
 		fixWantedSticks();
-		stickStarter = stickWinner; // TODO why?
-		commands.get(roundStarter).add(Protocol.YOUR_TURN);
 		
-		
-		
-		//set roundstart for next round.
+		// bug här
 		roundStarter = getPlayerWithId(getNextPlayer(roundStarter,party.size()));
+		stickStarter = roundStarter;
+		int start = roundStarter.getId();
+		int stop = (roundStarter.getId()==1?party.size():roundStarter.getId()-1);
+		System.out.println("start is " + start);
+		System.out.println("stop is " + stop);
+		while(start != stop) {
+			System.out.println("start is " + start);
+			if(getPlayerWithId(start).getWantedSticks() > stickStarter.getWantedSticks())
+				stickStarter = getPlayerWithId(start);
+			start = getNextPlayer(getPlayerWithId(start), party.size());
+		}
+		
+		commands.get(stickStarter).add(Protocol.YOUR_TURN);
+				
+		//set roundstart for next round.
 		notifyAll();
 	}
 
@@ -140,10 +149,10 @@ public class Monitor {
 			//if(p.equals(card.getOwner()))
 			//	continue;
 			playedCards.get(p).add(card);
-			commands.get(p).add(Protocol.PLAYED_CARD);
 		}
-		notifyAll();
+		sendCommando(Protocol.PLAYED_CARD);
 		currentStickCards.add(card);
+		notifyAll();
 		System.out.println("curr stick cards = " + currentStickCards.size() + " party size = " + party.size());
 		if(currentStickCards.size() == party.size()) {
 			getStickWinner();
@@ -168,9 +177,8 @@ public class Monitor {
 			}
 		}
 		currentStickCards.clear();
-		for(Player p : party) {
-			commands.get(p).add(Protocol.STICK_WINNER);
-		}
+		sendCommando(Protocol.STICK_WINNER);
+		notifyAll();
 		System.out.println("Round " + currentRound + " stick " + globalSticks + " was won by player " + stickWinner.getId());
 		stickStarter = stickWinner;
 		stickWinner.addStick();
@@ -178,13 +186,12 @@ public class Monitor {
 		if(globalSticks != currentRound) {
 			commands.get(stickStarter).add(Protocol.YOUR_TURN);
 		}
+		notifyAll();
 	}
 	
 	private int direction = 1;
 	private synchronized void handleRoundEnd() {
-		for(Player p : party) {
-			commands.get(p).add(Protocol.ROUND_SCORE);
-		}
+		sendCommando(Protocol.ROUND_SCORE);
 		globalSticks = 0;
 		System.out.println("Current round has ended: " + currentRound);
 		currentRound -= direction;
@@ -233,9 +240,7 @@ public class Monitor {
 	}
 	public synchronized void setTrumf(Card suit) {
 		trumf = suit;
-		for(Player p : party) {
-			commands.get(p).add(Protocol.SET_TRUMF);
-		}
+		sendCommando(Protocol.SET_TRUMF);
 	}
 	public Card getTrumf() {
 		return trumf;
@@ -246,9 +251,7 @@ public class Monitor {
 	 */
 	public synchronized void startGame() {
 		gameIsRunning = true;
-		for(Player p : party) {
-			commands.get(p).add(Protocol.NEW_GAME);
-		}
+		sendCommando(Protocol.NEW_GAME);
 		notifyAll();
 	}
 	public synchronized void sendCommando(int com) {
@@ -288,10 +291,7 @@ public class Monitor {
 	public synchronized void setWantedSticks(int nbrOfSticks, Player p) {
 		p.setWantedSticks(nbrOfSticks);
 		currentStickSetter = p;
-		System.out.println("set: "+nbrOfSticks+"to player: "+p.getId());
-		for(Player player : party) {
-			commands.get(player).add(Protocol.SET_WANTED_STICKS);
-		}
+		sendCommando(Protocol.SET_WANTED_STICKS);
 		notifyAll();
 	}
 	
