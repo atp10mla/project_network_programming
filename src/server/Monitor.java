@@ -20,12 +20,13 @@ public class Monitor {
 	private int currentRound = 3;
 	private int globalSticks;
 	private Player stickWinner;
-	private int maxNbrOfPlayers = 2;
+	private int maxNbrOfPlayers;
 	private boolean gameIsRunning = false;
 	private boolean readyToStartNewRound = false;
 	private final int totalAmountOfRounds = 3;
 	
-	public Monitor() {
+	public Monitor(int numberOfPlayers) {
+		maxNbrOfPlayers = numberOfPlayers;
 		for(int i=1; i<5; i++)
 			for(int j=2; j<=14; j++)
 				deck.add(new Card(i,j));
@@ -62,7 +63,6 @@ public class Monitor {
 		
 		fixWantedSticks();
 		
-		// bug här
 		roundStarter = getPlayerWithId(getNextPlayer(roundStarter,party.size()));
 		stickStarter = roundStarter;
 		int start = roundStarter.getId();

@@ -8,12 +8,14 @@ import protocol.Protocol;
 
 public class Server {
 	
+	
 	public static void main(String[]args) {
-		final long TIME_TO_CONNECT = 1000*2*60; // 2min
-		ServerSocket server = null;
-		Monitor monitor = new Monitor();
-		int currPlayer = 1;
+		int numberOfPlayers = 3;
+		Monitor monitor = new Monitor(numberOfPlayers);
 		
+		ServerSocket server = null;
+		final long TIME_TO_CONNECT = 1000*2*60; // 2min
+		int currPlayer = 1;
 		try {
 			System.out.println("Server starting...");
 			server = new ServerSocket(5000);
