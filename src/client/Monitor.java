@@ -6,13 +6,13 @@ import protocol.Card;
 import protocol.Protocol;
 
 public class Monitor {
-	private LinkedList<Integer> commandos = new LinkedList<Integer>();
+	private LinkedList<Integer> commands = new LinkedList<Integer>();
 	
-	private Card nextCard;
+	private Card chosenCard;
 	private int nbrOfSticks;	
 
-	public synchronized int getNextCommando() {
-		while(commandos.size() == 0) {
+	public synchronized int getNextCommand() {
+		while(commands.size() == 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -20,14 +20,14 @@ public class Monitor {
 				e.printStackTrace();
 			}
 		}
-		int cmd = commandos.pop();
+		int cmd = commands.pop();
 		notifyAll();
 		return cmd;
 	}
 	
 
-	public synchronized Card getNextCard() {		
-		while(nextCard == null) {
+	public synchronized Card getChosenCard() {		
+		while(chosenCard == null) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -35,28 +35,32 @@ public class Monitor {
 				e.printStackTrace();
 			}
 		}
-		Card card = nextCard;
-		nextCard = null;
+		Card card = chosenCard;
+		chosenCard = null;
 		notifyAll();
 		return card;
 	}
 	
-	public synchronized void addNextCard(Card card) {
-		nextCard = card;
+	public synchronized void setChosenCard(Card card) {
+		chosenCard = card;
 		System.out.println(card);
-		commandos.add(Protocol.SEND_CARD);
+		notifyAll();
+	}
+	
+	public synchronized void addSendCardCommand() {
+		commands.add(Protocol.SEND_CARD);
 		notifyAll();
 	}
 
 	public synchronized int getNumberOfSticks() {
 		// TODO Auto-generated method stub
-		commandos.poll();
+		commands.poll();
 		return nbrOfSticks;
 	}
-	public synchronized void addNumberOfSticks(int nbrOfSticks) {
+	public synchronized void addNumberOfSticksCommand(int nbrOfSticks) {
 		// TODO Auto-generated method stub
 		this.nbrOfSticks = nbrOfSticks;
-		commandos.addLast(Protocol.SET_STICKS);
+		commands.addLast(Protocol.SET_STICKS);
 		System.out.println("in monitor!");
 		notifyAll();
 	}

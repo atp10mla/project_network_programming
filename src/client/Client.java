@@ -25,7 +25,7 @@ public class Client {
 			System.exit(0);
 		} catch (IOException e) {
 			System.out.println("Could not connect to server.");
-			//System.exit(0);
+			System.exit(0);
 		}
 		InputStream is = null;
 		OutputStream os = null;
@@ -33,7 +33,7 @@ public class Client {
 			is = socket.getInputStream();
 			os = socket.getOutputStream();
 		} catch (IOException e) {
-			System.out.println("Fail to open output/input stream.");
+			System.out.println("Failed to open output/input stream.");
 			System.exit(0);
 		}
 		new OSHandler(os, monitor).start();

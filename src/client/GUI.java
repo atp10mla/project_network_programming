@@ -31,15 +31,13 @@ import javax.swing.border.EmptyBorder;
 import protocol.Card;
 
 public class GUI extends JFrame{
+	private static final long serialVersionUID = 1L;
+	
 	private TimerThread waitThread;
-
 	private TimerThread stickThread;
-
 	private TimerThread nextCardThread;
 
 	private Color backgroundGreen = new Color(78,222,97);
-
-	private static final long serialVersionUID = 1L;
 
 	private JLabel labelWait;
 
@@ -59,24 +57,26 @@ public class GUI extends JFrame{
 	private int nbrOfRounds = 3;
 	private int sticksInRound = nbrOfRounds + 1;
 
+	
+	private static final int WAIT_TIME = 60;
 
 	// JPanels
-	private JPanel myCards;
+	private JPanel myCardsPanel;
 	private JPanel middleCards;
 	private JPanel trumfPanel;
 
 	// Score board
 	private JLabel[][] scoreBoard;
 
-	// True if it is your turn to choice a card.
-	private boolean choiceCard = false;
+	// True if it is your turn to choose a card.
+	private boolean chooseCard = false;
 
 	// The monitor
 	private Monitor monitor;
 	private int nbrOfPlayers;
 
-	// First played card has suit.
-	private int playedSuit;
+	// The suit of the first played card
+	private int firstCardsSuit;
 
 	// Nbr of played cards in a stick
 	private int nbrOfPlayedCards;
@@ -94,6 +94,10 @@ public class GUI extends JFrame{
 	private int totalSticks;
 
 	private int dir = -1;
+	
+	private static final int ACTION_SET_STICKS = 0;
+	private static final int ACTION_CHOOSE_CARD = 1;
+	
 
 	/**
 	 * 
@@ -218,7 +222,7 @@ public class GUI extends JFrame{
 		if(nbrOfPlayedCards == nbrOfPlayers) {
 			middleCards.removeAll();
 			nbrOfPlayedCards = 0;
-			playedSuit = card.getSuit();
+			firstCardsSuit = card.getSuit();
 		} 
 		nbrOfPlayedCards++;
 		ImageIcon icon = createCardInMiddle(card);
@@ -257,7 +261,7 @@ public class GUI extends JFrame{
 		}
 		roundNbr++;
 		currentHand.clear();
-		myCards.removeAll();
+		myCardsPanel.removeAll();
 		//myCards.addTransparentCard();
 		revalidate();
 	}
@@ -282,10 +286,10 @@ public class GUI extends JFrame{
 		trumfPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		roundNbr = 0;
-		myCards = new JPanel();
-		myCards.setBorder(new EmptyBorder(10, 10, 10, 10));
-		myCards.setBackground(backgroundGreen);
-		myCards.setLayout(new FlowLayout());
+		myCardsPanel = new JPanel();
+		myCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		myCardsPanel.setBackground(backgroundGreen);
+		myCardsPanel.setLayout(new FlowLayout());
 		//myCards.setLayout(new GridLayout(1,nbrOfRounds));
 		middleCards = new JPanel();
 		middleCards.setBorder(BorderFactory.createLineBorder(Color.BLACK,5,false));
@@ -294,7 +298,7 @@ public class GUI extends JFrame{
 		middleCards.setAlignmentY(CENTER_ALIGNMENT);
 		middleCards.setBackground(new Color(214,193,75));
 		getContentPane().add(middleCards,BorderLayout.CENTER);
-		getContentPane().add(myCards,BorderLayout.SOUTH);
+		getContentPane().add(myCardsPanel,BorderLayout.SOUTH);
 		getContentPane().add(trumfPanel,BorderLayout.WEST);
 		nbrOfPlayedCards = nbrOfPlayers;
 		revalidate();
@@ -324,7 +328,7 @@ public class GUI extends JFrame{
 							}
 							setSticks = false;
 							System.out.println("count: "+ spinner.getValue());
-							monitor.addNumberOfSticks((int)spinner.getValue());
+							monitor.addNumberOfSticksCommand((int)spinner.getValue());
 							textMessage.setText("Wait for other players...");
 							revalidate();
 						}
@@ -520,26 +524,10 @@ public class GUI extends JFrame{
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 			// Check if ok to send card.
-			if(choiceCard) {
-				if(nbrOfPlayedCards==nbrOfPlayers || card.getSuit()== playedSuit) {
-					nextCardThread.kill();
-					Thread t = new Thread() {
-						public void run() {
-							System.out.println("send to monitor");
-							textMessage.setText("Wait for other players");
-							monitor.addNextCard(card);
-
-						}
-					};
-					t.start();
-					currentHand.remove(card);
-					myCards.remove(comp);
-
-
-					myCards.revalidate();
-					repaint();
-					// send card and delete from view...
-					choiceCard = false;
+			if(chooseCard) {
+				boolean lastCard = nbrOfPlayedCards==nbrOfPlayers;
+				if(lastCard || card.getSuit()== firstCardsSuit) {
+					removeCardFromHand();
 				} else {
 					boolean hasTrumf = false;
 					boolean hasSuit = false;
@@ -548,7 +536,7 @@ public class GUI extends JFrame{
 						if(card.getSuit()==trumf.getSuit()) {
 							hasTrumf = true;
 						}
-						if(card.getSuit()==playedSuit) {
+						if(card.getSuit()==firstCardsSuit) {
 							hasSuit = true;
 						}
 					}
@@ -557,28 +545,32 @@ public class GUI extends JFrame{
 					} else if(hasTrumf && card.getSuit() != trumf.getSuit()) {
 						return;
 					} else {
-						nextCardThread.kill();
-						Thread t = new Thread() {
-							public void run() {
-								System.out.println("send to monitor");
-								textMessage.setText("Wait for other players");
-								revalidate();
-								monitor.addNextCard(card);
-							}
-						};
-						t.start();
-
-						currentHand.remove(card);
-						myCards.remove(comp);
-
-						revalidate();
-						// send card and delete from view...
-						choiceCard = false;
-
+						removeCardFromHand();
 					}
 				}
 
 			}
+		}
+		private void removeCardFromHand() {
+			nextCardThread.kill();
+			Thread t = new Thread() {
+				public void run() {
+					System.out.println("send to monitor");
+					textMessage.setText("Wait for other players");
+					monitor.setChosenCard(card);
+					monitor.addSendCardCommand();
+
+				}
+			};
+			t.start();
+			currentHand.remove(card);
+			myCardsPanel.remove(comp);
+
+
+			myCardsPanel.revalidate();
+			repaint();
+			// send card and delete from view...
+			chooseCard = false;
 		}
 		@Override
 		public void mouseEntered(MouseEvent e) {
@@ -598,12 +590,12 @@ public class GUI extends JFrame{
 	 * Tells player that it is its turn to choice a card.
 	 */
 
-	public void choiceNextCard() {
-		choiceCard = true;
-		textMessage.setText("Choice next card: ");
-		nextCardThread = new TimerThread(15*1000,textMessage,this);
+	public void chooseNextCard() {
+		chooseCard = true;
+		textMessage.setText("Choose next card: ");
+		nextCardThread = new TimerThread(WAIT_TIME*1000,textMessage,this);
 		nextCardThread.setTextBefore(textMessage.getText());
-		nextCardThread.setActionOnFinish(2);
+		nextCardThread.setActionOnFinish(ACTION_CHOOSE_CARD);
 		nextCardThread.start();
 		// start timer here and put text.
 		revalidate();
@@ -615,9 +607,9 @@ public class GUI extends JFrame{
 	 */
 	public void setSticks() {
 		textMessage.setText("Set number of sticks: ");
-		stickThread = new TimerThread(15*1000, textMessage,this);
+		stickThread = new TimerThread(WAIT_TIME*1000, textMessage,this);
 		stickThread.setTextBefore(textMessage.getText());
-		stickThread.setActionOnFinish(1);
+		stickThread.setActionOnFinish(ACTION_SET_STICKS);
 		stickThread.start();
 		revalidate();
 		setSticks = true;
@@ -637,14 +629,14 @@ public class GUI extends JFrame{
 	/**
 	 * Update screen then finish dealing. 
 	 */
-	public void finishDealing() {
+	public void createIconsForCardsOnHand() {
 		Collections.sort(currentHand);
 
 		ImageIcon icon = createCardOnHand(null);
 		JLabel label = new JLabel();
 		label.setIcon(icon); 
 		label.setHorizontalAlignment(JLabel.CENTER);
-		myCards.add(label);
+		myCardsPanel.add(label);
 
 
 		for(Card card:currentHand) {
@@ -654,16 +646,16 @@ public class GUI extends JFrame{
 			label.addMouseListener(new CardListener(card,label));
 			label.setHorizontalAlignment(JLabel.CENTER);
 
-			myCards.add(label);
+			myCardsPanel.add(label);
 		}
 
 
 		revalidate();
 	}
 
-	public void auto(int action) {
+	public void makeAutoChoice(int action) {
 		switch(action) {
-		case 1:
+		case ACTION_SET_STICKS:
 			int sticks = (int)spinner.getValue();
 			if(playersSetSticks == nbrOfPlayers-1 && sticks + totalSticks == sticksInRound) {
 				if(sticks == 0) {
@@ -674,22 +666,23 @@ public class GUI extends JFrame{
 			}
 			setSticks = false;
 			System.out.println("count: "+ spinner.getValue());
-			monitor.addNumberOfSticks((int)spinner.getValue());
+			monitor.addNumberOfSticksCommand((int)spinner.getValue());
 			textMessage.setText("Wait for other players...");
 			revalidate();
 			break;
-		case 2:
-			choiceCard = false;
+		case ACTION_CHOOSE_CARD:
+			chooseCard = false;
 			for(Card card:currentHand) {
-				if(nbrOfPlayedCards==nbrOfPlayers || card.getSuit()== playedSuit) {
+				if(nbrOfPlayedCards==nbrOfPlayers || card.getSuit()== firstCardsSuit) {
 					System.out.println("send to monitor");
 					textMessage.setText("Wait for other players");
-					monitor.addNextCard(card);
+					monitor.setChosenCard(card);
+					monitor.addSendCardCommand();
 					currentHand.remove(card);
 					// How to fix?!
 					//myCards.remove(comp);
 
-					myCards.revalidate();
+					myCardsPanel.revalidate();
 					repaint();
 
 
@@ -702,7 +695,7 @@ public class GUI extends JFrame{
 						if(card2.getSuit()==trumf.getSuit()) {
 							hasTrumf = true;
 						}
-						if(card2.getSuit()==playedSuit) {
+						if(card2.getSuit()==firstCardsSuit) {
 							hasSuit = true;
 						}
 					}
@@ -714,7 +707,8 @@ public class GUI extends JFrame{
 						System.out.println("send to monitor");
 						textMessage.setText("Wait for other players");
 						revalidate();
-						monitor.addNextCard(card);
+						monitor.setChosenCard(card);
+						monitor.addSendCardCommand();
 
 						currentHand.remove(card);
 						// FIX this..

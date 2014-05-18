@@ -7,6 +7,7 @@ public class Player {
 	private String name;
 	private int id;
 	private int score;
+	private int totalScore;
 	private int sticks;
 	private int wantedSticks;
 	
@@ -15,6 +16,7 @@ public class Player {
 		this.name = name;
 		this.id = id;
 		score = 0;
+		totalScore = 0;
 		wantedSticks = -1;
 	}
 	
@@ -28,14 +30,6 @@ public class Player {
 	
 	public void addStick() {
 		sticks++;
-		if(sticks == wantedSticks) {
-			score = wantedSticks+10;
-			if(score == 10) {
-				score = 5;
-			}
-		} else {
-			score = 0;
-		}
 	}
 	
 	public int getSticks() {
@@ -76,11 +70,15 @@ public class Player {
 		return name;
 	}
 	
-	public void givePoints(int earnedPoints) {
-		score += earnedPoints;
-	}
-	
-	public int getScore() {
+	public int calculateScore() {
+		if(sticks == wantedSticks) {
+			score = wantedSticks+10;
+			if(score == 10) {
+				score = 5;
+			}
+		} else {
+			score = 0;
+		}
 		return score;
 	}
 }
