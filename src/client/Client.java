@@ -12,8 +12,7 @@ public class Client {
 	public static void main(String[]args) {
 		Monitor monitor = new Monitor();
 		GUI gui = new GUI(monitor);
-		gui.setVisible(true);
-		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
 	 
 		Socket socket = null; 

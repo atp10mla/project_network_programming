@@ -17,7 +17,8 @@ public class Monitor {
 	private Card trumf;
 	private Player stickStarter, roundStarter;
 	private int cardPosition = 0;
-	private int currentRound = 3;
+	private int numberOfRounds = 3;
+	private int currentRound = numberOfRounds;
 	private int globalSticks;
 	private Player stickWinner;
 	private int maxNbrOfPlayers;
@@ -276,6 +277,11 @@ public class Monitor {
 		return party.size();
 	}
 
+	public int getNumberOfRounds() {
+		return numberOfRounds;
+	}
+
+	
 	public int getRoundNumber() {
 		return currentRound;
 	}

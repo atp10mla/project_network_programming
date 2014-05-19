@@ -55,12 +55,13 @@ public class GUI extends JFrame {
 	// Vector with JLabels with sticks taken this round for each player.
 	private JLabel takenSticks[];
 
-	// Hard coded nbr of rounds. shift to set by server.
-	private int nbrOfRounds = 3;
-	private int sticksInRound = nbrOfRounds + 1;
-
+	// Nbr of rounds. 
+	private int numberOfRounds;
+	private int sticksInRound; 
+	
 	// Time a player has to make a move, seconds
-	private static final int WAIT_TIME = 60;
+	private final int WAIT_TIME = 60;
+	private final int CONNECTION_TIME = 60*1000*2;
 
 	// JPanels
 	private JPanel myCardsPanel;
@@ -114,31 +115,13 @@ public class GUI extends JFrame {
 				Font.PLAIN, 30));
 		getContentPane().setBackground(backgroundGreen);
 
-		getContentPane().add(waitingForPlayersLabel);
-
-		waitThread = new TimerThread(60 * 1000 * 2, waitingForPlayersLabel, (GUI) null);
+		getContentPane().add(waitingForPlayersLabel);		
+		waitThread = new TimerThread(CONNECTION_TIME, waitingForPlayersLabel,(GUI)null); 
 		waitThread.setTextBefore(waitingForPlayersLabel.getText());
 		waitThread.start();
-
+		
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		/*
-		 * newGame(1, 2); cleanHand(); setWantedSticks(2, 3); setScore(13, 1);
-		 * addCardToHand(new Card(Card.HEARTS,2)); addCardToHand(new
-		 * Card(Card.DIAMONDS,6)); addCardToHand(new Card(Card.CLUBS,3));
-		 * addCardToHand(new Card(Card.DIAMONDS,2)); addCardToHand(new
-		 * Card(Card.CLUBS,2)); addCardToHand(new Card(Card.DIAMONDS,9));
-		 * addCardToHand(new Card(Card.CLUBS,9)); finishDealing();
-		 * 
-		 * addNextPlayedCard(new Card(3,3),1); addNextPlayedCard(new
-		 * Card(3,2),1);
-		 * 
-		 * choiceNextCard(); setTrumf(new Card(3,5));
-		 */
-		// getContentPane().add(myCards,BorderLayout.NORTH);
-		// panel.add(null,BorderLayout.CENTER);
-		// panel.add(new JLabel("Example"), BorderLayout.EAST);
-
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
 	/**
@@ -267,7 +250,14 @@ public class GUI extends JFrame {
 		roundNbr++;
 		currentHand.clear();
 		myCardsPanel.removeAll();
-		// myCards.addTransparentCard();
+		
+		ImageIcon icon = createCardOnHand(null);
+		JLabel label = new JLabel();
+		label.setIcon(icon); 
+		label.setHorizontalAlignment(JLabel.CENTER);
+		myCardsPanel.add(label);
+
+		
 		revalidate();
 	}
 
@@ -279,12 +269,13 @@ public class GUI extends JFrame {
 	 * @param nbrOfPlayers
 	 *            Number of players
 	 */
-	public void newGame(int id, final int nbrOfPlayers) {
-		if (waitThread.isAlive()) {
+	public void newGame(int id, final int nbrOfPlayers, int numberOfRounds) {
+		if(waitThread.isAlive()) {
 			waitThread.kill();
 		}
+		this.numberOfRounds = numberOfRounds;
+		this.sticksInRound = numberOfRounds + 1;
 
-		this.remove(waitingForPlayersLabel);
 		this.nbrOfPlayers = nbrOfPlayers;
 		createScoreBoard(id);
 		createUpperLayout();
@@ -298,7 +289,7 @@ public class GUI extends JFrame {
 		myCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		myCardsPanel.setBackground(backgroundGreen);
 		myCardsPanel.setLayout(new FlowLayout());
-		// myCards.setLayout(new GridLayout(1,nbrOfRounds));
+		//myCards.setLayout(new GridLayout(1,numberOfRounds));
 		middleCards = new JPanel();
 		middleCards.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5,
 				false));
@@ -310,6 +301,27 @@ public class GUI extends JFrame {
 		getContentPane().add(myCardsPanel, BorderLayout.SOUTH);
 		getContentPane().add(trumfPanel, BorderLayout.WEST);
 		nbrOfPlayedCards = nbrOfPlayers;
+		
+		
+		
+
+		ImageIcon icon = createCardOnHand(new Card(Card.CLUBS, Card.ACE));
+		JLabel label = new JLabel();
+		label.setIcon(icon); 
+		label.setHorizontalAlignment(JLabel.CENTER);
+		myCardsPanel.add(label);
+		
+		
+		
+		icon = createTrumfCard(null);
+		label = new JLabel();
+		label.setIcon(icon); 
+		trumfPanel.add(new JLabel("Trumf"));
+		trumfPanel.add(label);
+				
+		
+		
+		this.remove(waitingForPlayersLabel);
 		revalidate();
 	}
 
@@ -350,7 +362,7 @@ public class GUI extends JFrame {
 				}
 			}
 		});
-		spinner = new JSpinner(new SpinnerNumberModel(1, 0, nbrOfRounds, 1));
+		spinner = new JSpinner( new SpinnerNumberModel( 1,0,numberOfRounds,1 ) );
 		sticks.add(spinner);
 		sticks.add(sendSticks);
 
@@ -403,27 +415,23 @@ public class GUI extends JFrame {
 
 	private void createScoreBoard(int id) {
 		JPanel panelScoreBoard = new JPanel();
-		panelScoreBoard.setLayout(new GridLayout(nbrOfRounds * 2 + 3,
-				nbrOfPlayers + 1));
+		panelScoreBoard.setLayout(new GridLayout(numberOfRounds*2+3,nbrOfPlayers+1));
 
-		panelScoreBoard.setBorder(BorderFactory.createCompoundBorder(
-				new EmptyBorder(0, 0, 0, 0),
-				BorderFactory.createLineBorder(Color.BLACK, 5, false)));
-		panelScoreBoard.setBackground(new Color(218, 242, 245));
+		panelScoreBoard.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(0, 0, 0, 0),BorderFactory.createLineBorder(Color.BLACK,5,false)));
+		panelScoreBoard.setBackground(new Color(218,242,245));
 
-		scoreBoard = new JLabel[nbrOfRounds * 2 + 3][nbrOfPlayers + 1];
-		for (int i = 0; i < nbrOfRounds * 2 + 3; i++) {
-			for (int j = 0; j <= nbrOfPlayers; j++) {
-				if (j == 0) {
-					if (i > 1 && i < nbrOfRounds * 2 + 2) {
-						if (i <= nbrOfRounds + 1) {
-							scoreBoard[i][j] = new JLabel("  "
-									+ (nbrOfRounds + 2 - i));
+
+		scoreBoard =  new JLabel[numberOfRounds*2+3][nbrOfPlayers+1];
+		for(int i = 0;i<numberOfRounds*2+3;i++) {
+			for(int j=0;j<=nbrOfPlayers;j++){
+				if(j==0) {
+					if(i>1 && i< numberOfRounds*2+2) {
+						if(i<=numberOfRounds+1) {
+							scoreBoard[i][j] = new JLabel("  "+(numberOfRounds+2-i));
 						} else {
-							scoreBoard[i][j] = new JLabel("  "
-									+ (i - nbrOfRounds - 1));
+							scoreBoard[i][j] = new JLabel("  "+(i-numberOfRounds-1));	
 						}
-					} else if (i == nbrOfRounds * 2 + 2) {
+					} else if(i == numberOfRounds*2+2) {
 						scoreBoard[i][j] = new JLabel("Tot score: ");
 
 					} else {
@@ -443,7 +451,7 @@ public class GUI extends JFrame {
 						} else {
 							scoreBoard[i][j] = new JLabel("" + j);
 						}
-					} else if (i == nbrOfRounds * 2 + 2) {
+					} else if(i==numberOfRounds*2+2) {
 
 						scoreBoard[i][j] = new JLabel("0");
 
@@ -473,6 +481,9 @@ public class GUI extends JFrame {
 			return path;
 		}
 		switch (card.getValue()) {
+		case Card.TRANSPARENT_SMALL:
+			path = "transparent_small.png";
+			return path;
 		case Card.JACK:
 			path += "jack_of_";
 			break;
@@ -570,7 +581,7 @@ public class GUI extends JFrame {
 	}
 
 	public void setTotalScore(int score, int playerId) {
-		scoreBoard[nbrOfRounds * 2 + 2][playerId].setText(score + "");
+		scoreBoard[numberOfRounds*2+2][playerId].setText(score+"");
 		revalidate();
 	}
 
@@ -580,13 +591,15 @@ public class GUI extends JFrame {
 	public void createIconsForCardsOnHand() {
 		Collections.sort(currentHand);
 
-		ImageIcon icon = createCardOnHand(null);
-		JLabel label = new JLabel();
-		label.setIcon(icon);
+		ImageIcon icon;
+		JLabel label;
+	/*
+		label.setIcon(icon); 
 		label.setHorizontalAlignment(JLabel.CENTER);
 		myCardsPanel.add(label);
+*/
 
-		for (Card card : currentHand) {
+		for(Card card:currentHand) {
 			icon = createCardOnHand(card);
 			label = new JLabel();
 			label.setIcon(icon);
