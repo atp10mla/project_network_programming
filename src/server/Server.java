@@ -12,6 +12,32 @@ public class Server {
 	public static void main(String[]args) {
 		int numberOfPlayers = 2;
 		int numberOfRounds = 2;
+		int port = 5000;
+		if(args.length == 3) {
+			try {
+				port = Integer.parseInt(args[0]);
+				numberOfPlayers = Integer.parseInt(args[1]);
+				numberOfRounds = Integer.parseInt(args[2]);
+			} catch(Throwable e) {
+				System.out.println("You start the server by typing the following: \n"
+						+ " java -jar plumpServer.jar <port> <number_of_players> <number_of_rounds>\n"
+						+ "where:\n"
+						+ "number_of_players = 2-5\n"
+						+ "number_of_rounds = 2-10.");	
+				return;
+			}
+		} else if(args.length == 0) {
+			// Do nothing...
+		} else {
+			System.out.println("You start the server by typing the following: \n"
+					+ " java -jar plumpServer.jar <port> <number_of_players> <number_of_rounds>\n"
+					+ "where:\n"
+					+ "number_of_players = 2-5\n"
+					+ "number_of_rounds = 2-10.");
+			return;
+		}
+
+		System.out.println("A game is started with up to "+numberOfPlayers+" players and "+numberOfRounds+" rounds on port "+port+".");
 		Monitor monitor = new Monitor(numberOfPlayers, numberOfRounds);
 		
 		ServerSocket server = null;
@@ -19,7 +45,7 @@ public class Server {
 		int currPlayer = 1;
 		try {
 			System.out.println("Server starting...");
-			server = new ServerSocket(5000);
+			server = new ServerSocket(port);
 		} catch (IOException e) {
 			System.out.println("Could not set up server");
 			System.exit(1);
