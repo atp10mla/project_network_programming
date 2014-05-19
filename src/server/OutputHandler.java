@@ -76,6 +76,9 @@ public class OutputHandler extends Thread {
 				writeCommandAndData(Protocol.SET_WINNER);
 				writeCommandAndData(monitor.getWinner());
 				break;
+			case Protocol.PLAYER_LEFT:
+				writeCommandAndData(Protocol.PLAYER_LEFT);
+				return;
 			}
 		}
 

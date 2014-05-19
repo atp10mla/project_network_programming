@@ -342,4 +342,8 @@ public class Monitor {
 		}
 		return id;
 	}
+	public synchronized void addPlayerLeft() {
+		addCommandForAll(Protocol.PLAYER_LEFT);
+		notifyAll();
+	}
 }

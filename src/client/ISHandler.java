@@ -77,6 +77,11 @@ public class ISHandler extends Thread{
 					int winner = is.read();
 					gui.setWinner(winner);
 					break;
+				case Protocol.PLAYER_LEFT:
+					System.out.println("PLAYER LEFT THE GAME");
+					gui.endGame();
+					return;
+				
 				}
 			}
 		} catch (IOException e) {		

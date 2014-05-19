@@ -37,6 +37,10 @@ public class Protocol {
 	//informs player about the winner of the game
 	public static final int SET_WINNER = 11; // followed by player id
 	
+	//player left the game
+	public static final int PLAYER_LEFT = 12; // followed by player id
+		
+	
 	public static final String ERROR_TIME_OUT = "Time to connect ended\n";
 	
 		

@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -63,7 +64,7 @@ public class GUI extends JFrame {
 	private int sticksInRound; 
 	
 	// Time a player has to make a move, seconds
-	private final int WAIT_TIME = 60;
+	private final int WAIT_TIME = 5;
 	private final int CONNECTION_TIME = 60*1000*2;
 
 	// JPanels
@@ -747,5 +748,10 @@ public class GUI extends JFrame {
 		public void mousePressed(MouseEvent e) {}
 		@Override
 		public void mouseReleased(MouseEvent e) {}
+	}
+	public void endGame() {
+		JOptionPane.showMessageDialog(this, "Another player left the game. The game is over...");
+		
+		System.exit(0);
 	}
 }
