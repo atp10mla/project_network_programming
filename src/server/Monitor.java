@@ -71,23 +71,11 @@ public class Monitor {
 		addCommandForAll(Protocol.NEW_ROUND);
 		addCommandForAll(Protocol.SET_TRUMF);
 		notifyAll();
-<<<<<<< HEAD
-		
-		if(!firstRound) {
-			roundStarter = getPlayerWithId(getNextPlayer(roundStarter,party.size()));
-		} else {
-			firstRound = false;
-		}
-		
-		stickStarter = roundStarter;
-		fixWantedSticks();
-=======
 
 		askPlayersForWantedSticks();
 
 		stickStarter = roundStarter;
 		roundStarter = getPlayerWithId(getNextPlayer(roundStarter, party.size()));
->>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 		int start = roundStarter.getId();
 		int stop = (roundStarter.getId() == 1 ? party.size() : roundStarter
 				.getId() - 1);
@@ -104,13 +92,8 @@ public class Monitor {
 		}
 
 		commands.get(stickStarter).add(Protocol.YOUR_TURN);
-<<<<<<< HEAD
 		
 		//set roundstart for next round.
-=======
-
-		// set roundstart for next round.
->>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 		notifyAll();
 	}
 
@@ -123,19 +106,8 @@ public class Monitor {
 	 */
 	public synchronized void askPlayersForWantedSticks() {
 		int curr = roundStarter.getId();
-<<<<<<< HEAD
-		int stop;
-		if(curr == 1) {
-			stop = party.size();
-		} else {
-			stop = curr-1;
-		}
-		
-		while(curr != stop) {
-=======
 		int playersAsked = 0;
 		while (playersAsked < party.size()) {
->>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 			Player temp = getPlayerWithId(curr);
 			commands.get(temp).add(Protocol.SET_STICKS);
 			notifyAll();

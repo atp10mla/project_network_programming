@@ -15,12 +15,8 @@ public class Player {
 		this.os = os;
 		this.name = name;
 		this.id = id;
-<<<<<<< HEAD
-		score = 5;
-=======
 		roundScore = 0;
 		totalScore = 0;
->>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 		wantedSticks = -1;
 	}
 	
@@ -34,14 +30,6 @@ public class Player {
 	
 	public void addStick() {
 		sticks++;
-<<<<<<< HEAD
-		if(sticks == wantedSticks) {
-			score = wantedSticks+10;
-		} else {
-			score = 0;
-		}
-=======
->>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 	}
 	
 	public int getSticks() {

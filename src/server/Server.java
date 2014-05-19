@@ -10,9 +10,6 @@ public class Server {
 	
 	public static void main(String[]args) {
 		int numberOfPlayers = 2;
-<<<<<<< HEAD
-		Monitor monitor = new Monitor(numberOfPlayers);
-=======
 		int numberOfRounds = 2;
 		int port = 5000;
 		if(args.length == 3) {
@@ -41,7 +38,6 @@ public class Server {
 
 		System.out.println("A game is started with up to "+numberOfPlayers+" players and "+numberOfRounds+" rounds on port "+port+".");
 		Monitor monitor = new Monitor(numberOfPlayers, numberOfRounds);
->>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 		
 		ServerSocket server = null;
 		final long TIME_TO_CONNECT = 1000*2*60; // 2min
