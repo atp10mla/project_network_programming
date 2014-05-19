@@ -6,7 +6,8 @@ public class Player {
 	private OutputStream os;
 	private String name;
 	private int id;
-	private int score;
+	private int roundScore;
+	private int totalScore;
 	private int sticks;
 	private int wantedSticks;
 	
@@ -14,7 +15,12 @@ public class Player {
 		this.os = os;
 		this.name = name;
 		this.id = id;
+<<<<<<< HEAD
 		score = 5;
+=======
+		roundScore = 0;
+		totalScore = 0;
+>>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 		wantedSticks = -1;
 	}
 	
@@ -28,15 +34,22 @@ public class Player {
 	
 	public void addStick() {
 		sticks++;
+<<<<<<< HEAD
 		if(sticks == wantedSticks) {
 			score = wantedSticks+10;
 		} else {
 			score = 0;
 		}
+=======
+>>>>>>> 81f72a4f886c51ec5ae14af54c5ee54b75e0598c
 	}
 	
 	public int getSticks() {
 		return sticks;
+	}
+	
+	public void clearSticks() {
+		sticks = 0;
 	}
 	
 	@Override
@@ -73,11 +86,24 @@ public class Player {
 		return name;
 	}
 	
-	public void givePoints(int earnedPoints) {
-		score += earnedPoints;
+	public void calculateScoreForRound() {
+		System.out.println("Calculating points for player " + id + ": " + sticks + " sticks " + wantedSticks + " wantedSticks.");
+		if(sticks == wantedSticks) {
+			roundScore = wantedSticks+10;
+			if(roundScore == 10) {
+				roundScore = 5;
+			}
+		} else {
+			roundScore = 0;
+		}
+		totalScore += roundScore;
 	}
 	
-	public int getScore() {
-		return score;
+	public int getRoundScore() {
+		return roundScore;
+	}
+	
+	public int getTotalScore() {
+		return totalScore;
 	}
 }

@@ -18,12 +18,12 @@ public class OSHandler extends Thread{
 	public void run() {
 		try {
 			while(true) {
-				int cmd = monitor.getNextCommando();
-				System.out.println("Next commande sended!: "+cmd);
+				int cmd = monitor.getNextCommand();
+				System.out.println("Next command sent: "+cmd);
 				switch(cmd) {
 				case Protocol.SEND_CARD: // Send next card.
 					System.out.println("SEND SEND CARD");
-					Card card = monitor.getNextCard();
+					Card card = monitor.getChosenCard();
 					os.write(Protocol.SEND_CARD);
 					os.write(card.getSuit());
 					os.write(card.getValue());	

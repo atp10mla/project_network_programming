@@ -34,9 +34,12 @@ public class InputHandler extends Thread {
 				monitor.setWantedSticks(readOneCommand(is), p);
 				break;
 			case Protocol.GET_DELAY: {
-				monitor.sendCommando(Protocol.SEND_MORE_TIME);
+				monitor.addCommandForAll(Protocol.SEND_MORE_TIME);
 				break;
 			}
+			case Protocol.PLAYER_LEFT:
+				monitor.addPlayerLeft();
+				System.exit(0);
 			default: {
 				System.out.println(" -- unexpected input");
 			}
@@ -51,9 +54,8 @@ public class InputHandler extends Thread {
 			return is.read();
 		} catch (IOException e) {
 			System.out.println("Could not read one command ih");
-			System.exit(1);
+			return Protocol.PLAYER_LEFT;
 		}
-		return 0;
 	}
 
 }

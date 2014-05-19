@@ -20,7 +20,7 @@ public class OutputHandler extends Thread {
 	public void run() {
 		monitor.addPlayer(p);
 		while(true) {
-			int cmd = monitor.getNextCommando(p); 
+			int cmd = monitor.getNextCommand(p); 
 			switch(cmd) {
 			case Protocol.NEW_GAME:
 				makeNewGame();
@@ -42,7 +42,8 @@ public class OutputHandler extends Thread {
 				int iter;
 				writeCommandAndData((iter = monitor.getNumberOfPlayers()));
 				for(int id=1; id<=iter; id++) {
-					writeCommandAndData(monitor.getScoreOfPlayer(id));
+					writeCommandAndData(monitor.getRoundScoreOfPlayer(id));
+					writeCommandAndData(monitor.getTotalScoreOfPlayer(id));
 				}
 				break;
 			case Protocol.SET_TRUMF:
@@ -71,6 +72,13 @@ public class OutputHandler extends Thread {
 				writeCommandAndData(Protocol.SET_STICKS);
 //				System.out.println("Send SET_STICKS to player " + p.getId());
 				break;
+			case Protocol.SET_WINNER:
+				writeCommandAndData(Protocol.SET_WINNER);
+				writeCommandAndData(monitor.getWinner());
+				break;
+			case Protocol.PLAYER_LEFT:
+				writeCommandAndData(Protocol.PLAYER_LEFT);
+				return;
 			}
 		}
 
@@ -90,6 +98,7 @@ public class OutputHandler extends Thread {
 		System.out.println("Send NEW_GAME to player " + p.getId());
 		writeCommandAndData(p.getId());
 		writeCommandAndData(monitor.getNumberOfPlayers());
+		writeCommandAndData(monitor.getNumberOfRounds());
 	}
 
 	private void startNewRound() {

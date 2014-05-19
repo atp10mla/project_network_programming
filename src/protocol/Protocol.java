@@ -10,7 +10,7 @@ public class Protocol {
 	// informs player that it is his turn to play a card
 	public static final int YOUR_TURN = 3;
 	
-	// informs player what card a certain player palyed
+	// informs player what card a certain player played
 	public static final int PLAYED_CARD = 4; // followed by id, suit, value
 	
 	// informs player that a new game is starting
@@ -33,6 +33,13 @@ public class Protocol {
 	
 	// inform server/ask player what number of stick the person wants
 	public static final int SET_STICKS = 10; // followed by nbr_of_sticks / nothing when server ask..
+	
+	//informs player about the winner of the game
+	public static final int SET_WINNER = 11; // followed by player id
+	
+	//player left the game
+	public static final int PLAYER_LEFT = 12; // followed by player id
+		
 	
 	public static final String ERROR_TIME_OUT = "Time to connect ended\n";
 	

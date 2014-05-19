@@ -33,11 +33,9 @@ public class TimerThread extends Thread{
 				// TODO Auto-generated catch block
 				
 			}
-			System.out.println(tick + " " + time);
-			// write to GUI...
 		}
 		if(gui != null && !kill) {
-			gui.auto(action);
+			gui.makeAutoChoice(action);
 		}
 		
 		
