@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import javax.swing.JFrame;
 public class Client {	
 	
 	public static void main(String[]args) {
@@ -39,7 +38,6 @@ public class Client {
 		Socket socket = null; 
 		try {
 			socket = new Socket(server, port);
-			//socket = new Socket("localhost", 5000);
 		} catch (UnknownHostException e) {
 			System.out.println("Unknown host");
 			System.exit(0);
