@@ -8,7 +8,6 @@ import protocol.Protocol;
 
 public class Server {
 	
-	
 	public static void main(String[]args) {
 		int numberOfPlayers = 2;
 		int numberOfRounds = 2;
@@ -20,7 +19,7 @@ public class Server {
 				numberOfRounds = Integer.parseInt(args[2]);
 			} catch(Throwable e) {
 				System.out.println("You start the server by typing the following: \n"
-						+ " java -jar plumpServer.jar <port> <number_of_players> <number_of_rounds>\n"
+						+ "java -jar plumpServer.jar <port> <number_of_players> <number_of_rounds>\n"
 						+ "where:\n"
 						+ "number_of_players = 2-5\n"
 						+ "number_of_rounds = 2-10.");	
