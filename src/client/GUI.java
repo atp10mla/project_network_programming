@@ -57,7 +57,8 @@ public class GUI extends JFrame{
 	private int numberOfRounds;
 	private int sticksInRound; 
 	
-	private static final int WAIT_TIME = 60;
+	private final int WAIT_TIME = 60;
+	private final int CONNECTION_TIME = 60*1000*2;
 
 	// JPanels
 	private JPanel myCardsPanel;
@@ -115,35 +116,9 @@ public class GUI extends JFrame{
 		getContentPane().setBackground(backgroundGreen);
 
 		getContentPane().add(labelWait);		
-		waitThread = new TimerThread(60*1000*2, labelWait,(GUI)null); 
+		waitThread = new TimerThread(CONNECTION_TIME, labelWait,(GUI)null); 
 		waitThread.setTextBefore(labelWait.getText());
 		waitThread.start();
-		
-		/*
-		newGame(1, 2);
-		cleanHand();
-		setWantedSticks(2, 3);
-		setScore(13, 1);
-		addCardToHand(new Card(Card.HEARTS,2));
-		addCardToHand(new Card(Card.DIAMONDS,6));
-		addCardToHand(new Card(Card.CLUBS,3));
-		addCardToHand(new Card(Card.DIAMONDS,2));
-		addCardToHand(new Card(Card.CLUBS,2));
-		addCardToHand(new Card(Card.DIAMONDS,9));
-		addCardToHand(new Card(Card.CLUBS,9));
-		finishDealing();
-
-		addNextPlayedCard(new Card(3,3),1);
-		addNextPlayedCard(new Card(3,2),1);
-
-		choiceNextCard();
-		setTrumf(new Card(3,5));
-
-		 */
-		//getContentPane().add(myCards,BorderLayout.NORTH);
-		//panel.add(null,BorderLayout.CENTER);
-		//panel.add(new JLabel("Example"), BorderLayout.EAST);
-
 	}
 
 	/**
