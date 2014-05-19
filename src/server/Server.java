@@ -10,8 +10,9 @@ public class Server {
 	
 	
 	public static void main(String[]args) {
-		int numberOfPlayers = 3;
-		Monitor monitor = new Monitor(numberOfPlayers);
+		int numberOfPlayers = 2;
+		int numberOfRounds = 2;
+		Monitor monitor = new Monitor(numberOfPlayers, numberOfRounds);
 		
 		ServerSocket server = null;
 		final long TIME_TO_CONNECT = 1000*2*60; // 2min
