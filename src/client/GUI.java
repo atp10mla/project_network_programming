@@ -37,7 +37,7 @@ public class GUI extends JFrame{
 	private TimerThread stickThread;
 	private TimerThread nextCardThread;
 
-	private Color backgroundGreen = new Color(78,222,97);
+	private Color backgroundGreen = new Color(14,171,9);
 
 	private JLabel labelWait;
 
@@ -108,7 +108,7 @@ public class GUI extends JFrame{
 		setSize(800,600); // default size is 0,0
 		setLayout(new BorderLayout());
 		this.monitor = monitor;
-		labelWait = new JLabel("Wait for players: ");
+		labelWait = new JLabel("Waiting for players... ");
 
 		labelWait.setHorizontalAlignment(SwingConstants.CENTER);
 		labelWait.setVerticalAlignment(SwingConstants.CENTER);
@@ -119,6 +119,7 @@ public class GUI extends JFrame{
 		waitThread = new TimerThread(60*1000*2, labelWait,(GUI)null); 
 		waitThread.setTextBefore(labelWait.getText());
 		waitThread.start();
+		
 		/*
 		newGame(1, 2);
 		cleanHand();
@@ -317,7 +318,7 @@ public class GUI extends JFrame{
 			public void actionPerformed(ActionEvent event) {
 				if(setSticks) {
 					if(playersSetSticks == nbrOfPlayers-1 && (int)spinner.getValue() + totalSticks == sticksInRound) {
-						textMessage.setText("Total sticks +  your sticks = total sticks in the round. Error");
+						textMessage.setText("This number of sticks is not allowed!");
 						revalidate();
 						return;
 					}
@@ -592,7 +593,7 @@ public class GUI extends JFrame{
 
 	public void chooseNextCard() {
 		chooseCard = true;
-		textMessage.setText("Choose next card: ");
+		textMessage.setText("Choose card: ");
 		nextCardThread = new TimerThread(WAIT_TIME*1000,textMessage,this);
 		nextCardThread.setTextBefore(textMessage.getText());
 		nextCardThread.setActionOnFinish(ACTION_CHOOSE_CARD);
@@ -620,10 +621,14 @@ public class GUI extends JFrame{
 	 * @param score The score
 	 * @param playerId The player
 	 */
-	public void setScore(int score, int playerId) {
+	public void setRoundScore(int score, int playerId) {
 		scoreBoard[roundNbr+1][playerId].setText(score+"");
 		revalidate();
-
+	}
+	
+	public void setTotalScore(int score, int playerId) {
+		scoreBoard[nbrOfRounds*2+2][playerId].setText(score+"");
+		revalidate();
 	}
 
 	/**
@@ -652,6 +657,14 @@ public class GUI extends JFrame{
 
 		revalidate();
 	}
+	
+	public void setWinner(int id) {
+		if (id == -1) {
+			textMessage.setText("The game has ended in a draw.");
+		} else {
+			textMessage.setText("Player " + id + " has won the game. Congratulations!");
+		}
+	}
 
 	public void makeAutoChoice(int action) {
 		switch(action) {
@@ -667,7 +680,7 @@ public class GUI extends JFrame{
 			setSticks = false;
 			System.out.println("count: "+ spinner.getValue());
 			monitor.addNumberOfSticksCommand((int)spinner.getValue());
-			textMessage.setText("Wait for other players...");
+			textMessage.setText("Waiting for other players...");
 			revalidate();
 			break;
 		case ACTION_CHOOSE_CARD:
@@ -675,7 +688,7 @@ public class GUI extends JFrame{
 			for(Card card:currentHand) {
 				if(nbrOfPlayedCards==nbrOfPlayers || card.getSuit()== firstCardsSuit) {
 					System.out.println("send to monitor");
-					textMessage.setText("Wait for other players");
+					textMessage.setText("Waiting for other players...");
 					monitor.setChosenCard(card);
 					monitor.addSendCardCommand();
 					currentHand.remove(card);
@@ -705,7 +718,7 @@ public class GUI extends JFrame{
 						continue;
 					} else {
 						System.out.println("send to monitor");
-						textMessage.setText("Wait for other players");
+						textMessage.setText("Waiting for other players...");
 						revalidate();
 						monitor.setChosenCard(card);
 						monitor.addSendCardCommand();

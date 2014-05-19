@@ -66,9 +66,16 @@ public class ISHandler extends Thread{
 					System.out.println("GET ROUND SCORE");
 					nbrOfPlayers = is.read();
 					for(int i = 1;i<=nbrOfPlayers;i++) {
-						int score = is.read();
-						gui.setScore(score,i);
+						int roundScore = is.read();
+						int totalScore = is.read();
+						gui.setRoundScore(roundScore,i);
+						gui.setTotalScore(totalScore, i);
 					}
+					break;
+				case Protocol.SET_WINNER:
+					System.out.println("GET SET WINNER");
+					int winner = is.read();
+					gui.setWinner(winner);
 					break;
 				}
 			}

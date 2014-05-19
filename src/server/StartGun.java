@@ -13,6 +13,7 @@ public class StartGun extends Thread {
 		monitor.startNewRound();
 		while(true) {
 			monitor.waitForNewRoundReady();
+			monitor.startNewRound();
 		}
 	}
 }

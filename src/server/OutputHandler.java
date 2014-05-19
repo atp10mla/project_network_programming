@@ -42,7 +42,8 @@ public class OutputHandler extends Thread {
 				int iter;
 				writeCommandAndData((iter = monitor.getNumberOfPlayers()));
 				for(int id=1; id<=iter; id++) {
-					writeCommandAndData(monitor.getScoreOfPlayer(id));
+					writeCommandAndData(monitor.getRoundScoreOfPlayer(id));
+					writeCommandAndData(monitor.getTotalScoreOfPlayer(id));
 				}
 				break;
 			case Protocol.SET_TRUMF:
@@ -70,6 +71,10 @@ public class OutputHandler extends Thread {
 			case Protocol.SET_STICKS:
 				writeCommandAndData(Protocol.SET_STICKS);
 //				System.out.println("Send SET_STICKS to player " + p.getId());
+				break;
+			case Protocol.SET_WINNER:
+				writeCommandAndData(Protocol.SET_WINNER);
+				writeCommandAndData(monitor.getWinner());
 				break;
 			}
 		}
