@@ -17,8 +17,8 @@ public class Monitor {
 	private Card trumf;
 	private Player stickStarter, roundStarter;
 	private int cardPosition = 0;
-	private int numberOfRounds = 3;
-	private int currentRound = numberOfRounds;
+	private int numberOfRounds;
+	private int currentRound;
 	private int globalSticks;
 	private Player stickWinner;
 	private int maxNbrOfPlayers;
@@ -26,7 +26,9 @@ public class Monitor {
 	private boolean readyToStartNewRound = false;
 	private LinkedList<Integer> roundNumbers = new LinkedList<Integer>();
 
-	public Monitor(int numberOfPlayers) {
+	public Monitor(int numberOfPlayers, int numberOfRounds) {
+		this.numberOfRounds = numberOfRounds;
+		this.currentRound = numberOfRounds;
 		maxNbrOfPlayers = numberOfPlayers;
 		for (int i = 1; i < 5; i++)
 			for (int j = 2; j <= 14; j++)
