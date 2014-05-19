@@ -95,6 +95,7 @@ public class OutputHandler extends Thread {
 		System.out.println("Send NEW_GAME to player " + p.getId());
 		writeCommandAndData(p.getId());
 		writeCommandAndData(monitor.getNumberOfPlayers());
+		writeCommandAndData(monitor.getNumberOfRounds());
 	}
 
 	private void startNewRound() {

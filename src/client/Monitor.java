@@ -57,6 +57,7 @@ public class Monitor {
 		commands.poll();
 		return nbrOfSticks;
 	}
+	
 	public synchronized void addNumberOfSticksCommand(int nbrOfSticks) {
 		// TODO Auto-generated method stub
 		this.nbrOfSticks = nbrOfSticks;

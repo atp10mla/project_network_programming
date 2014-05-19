@@ -53,10 +53,9 @@ public class GUI extends JFrame{
 	// Vector with JLabels with sticks taken this round for each player.
 	private JLabel takenSticks[];
 
-	// Hard coded nbr of rounds. shift to set by server.
-	private int nbrOfRounds = 3;
-	private int sticksInRound = nbrOfRounds + 1;
-
+	// Nbr of rounds. 
+	private int numberOfRounds;
+	private int sticksInRound; 
 	
 	private static final int WAIT_TIME = 60;
 
@@ -279,10 +278,13 @@ public class GUI extends JFrame{
 	 * @param id The id you have.
 	 * @param nbrOfPlayers Number of players
 	 */
-	public void newGame(int id, final int nbrOfPlayers) {
+	public void newGame(int id, final int nbrOfPlayers, int numberOfRounds) {
 		if(waitThread.isAlive()) {
 			waitThread.kill();
 		}
+		this.numberOfRounds = numberOfRounds;
+		this.sticksInRound = numberOfRounds + 1;
+
 
 		this.nbrOfPlayers = nbrOfPlayers;
 		createScoreBoard(id);
@@ -297,7 +299,7 @@ public class GUI extends JFrame{
 		myCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		myCardsPanel.setBackground(backgroundGreen);
 		myCardsPanel.setLayout(new FlowLayout());
-		//myCards.setLayout(new GridLayout(1,nbrOfRounds));
+		//myCards.setLayout(new GridLayout(1,numberOfRounds));
 		middleCards = new JPanel();
 		middleCards.setBorder(BorderFactory.createLineBorder(Color.BLACK,5,false));
 		middleCards.setLayout(new GridBagLayout());
@@ -365,7 +367,7 @@ public class GUI extends JFrame{
 				}
 			}
 		});
-		spinner = new JSpinner( new SpinnerNumberModel( 1,0,nbrOfRounds,1 ) );
+		spinner = new JSpinner( new SpinnerNumberModel( 1,0,numberOfRounds,1 ) );
 		sticks.add(spinner);
 		sticks.add(sendSticks);
 
@@ -421,23 +423,23 @@ public class GUI extends JFrame{
 
 	private void createScoreBoard(int id) {
 		JPanel panelScoreBoard = new JPanel();
-		panelScoreBoard.setLayout(new GridLayout(nbrOfRounds*2+3,nbrOfPlayers+1));
+		panelScoreBoard.setLayout(new GridLayout(numberOfRounds*2+3,nbrOfPlayers+1));
 
 		panelScoreBoard.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(0, 0, 0, 0),BorderFactory.createLineBorder(Color.BLACK,5,false)));
 		panelScoreBoard.setBackground(new Color(218,242,245));
 
 
-		scoreBoard =  new JLabel[nbrOfRounds*2+3][nbrOfPlayers+1];
-		for(int i = 0;i<nbrOfRounds*2+3;i++) {
+		scoreBoard =  new JLabel[numberOfRounds*2+3][nbrOfPlayers+1];
+		for(int i = 0;i<numberOfRounds*2+3;i++) {
 			for(int j=0;j<=nbrOfPlayers;j++){
 				if(j==0) {
-					if(i>1 && i< nbrOfRounds*2+2) {
-						if(i<=nbrOfRounds+1) {
-							scoreBoard[i][j] = new JLabel("  "+(nbrOfRounds+2-i));
+					if(i>1 && i< numberOfRounds*2+2) {
+						if(i<=numberOfRounds+1) {
+							scoreBoard[i][j] = new JLabel("  "+(numberOfRounds+2-i));
 						} else {
-							scoreBoard[i][j] = new JLabel("  "+(i-nbrOfRounds-1));	
+							scoreBoard[i][j] = new JLabel("  "+(i-numberOfRounds-1));	
 						}
-					} else if(i == nbrOfRounds*2+2) {
+					} else if(i == numberOfRounds*2+2) {
 						scoreBoard[i][j] = new JLabel("Tot score: ");
 
 					} else {
@@ -458,7 +460,7 @@ public class GUI extends JFrame{
 						} else {
 							scoreBoard[i][j] = new JLabel(""+j);
 						}
-					} else if(i==nbrOfRounds*2+2) {
+					} else if(i==numberOfRounds*2+2) {
 
 						scoreBoard[i][j] = new JLabel("0");
 
@@ -657,7 +659,7 @@ public class GUI extends JFrame{
 	}
 	
 	public void setTotalScore(int score, int playerId) {
-		scoreBoard[nbrOfRounds*2+2][playerId].setText(score+"");
+		scoreBoard[numberOfRounds*2+2][playerId].setText(score+"");
 		revalidate();
 	}
 

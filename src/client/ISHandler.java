@@ -22,7 +22,7 @@ public class ISHandler extends Thread{
 					System.out.println("GET NEW GAME");
 					int id = is.read();
 					int nbrOfPlayers = is.read();
-					gui.newGame(id, nbrOfPlayers);
+					gui.newGame(id, nbrOfPlayers,is.read());
 					break;				
 				case Protocol.NEW_ROUND:
 					System.out.println("GET NEW ROUND");
