@@ -12,6 +12,7 @@ public class Card implements Comparable<Card>{
 	public static final int JACK = 11;
 	public static final int QUEEN = 12;
 	public static final int KING = 13;
+	public static final int TRANSPARENT_SMALL = 15;
 	
 	private int suit;
 	private int value;

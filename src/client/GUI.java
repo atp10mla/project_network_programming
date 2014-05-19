@@ -263,7 +263,14 @@ public class GUI extends JFrame{
 		roundNbr++;
 		currentHand.clear();
 		myCardsPanel.removeAll();
-		//myCards.addTransparentCard();
+		
+		ImageIcon icon = createCardOnHand(null);
+		JLabel label = new JLabel();
+		label.setIcon(icon); 
+		label.setHorizontalAlignment(JLabel.CENTER);
+		myCardsPanel.add(label);
+
+		
 		revalidate();
 	}
 
@@ -277,7 +284,6 @@ public class GUI extends JFrame{
 			waitThread.kill();
 		}
 
-		this.remove(labelWait);
 		this.nbrOfPlayers = nbrOfPlayers;
 		createScoreBoard(id);
 		createUpperLayout();
@@ -302,6 +308,27 @@ public class GUI extends JFrame{
 		getContentPane().add(myCardsPanel,BorderLayout.SOUTH);
 		getContentPane().add(trumfPanel,BorderLayout.WEST);
 		nbrOfPlayedCards = nbrOfPlayers;
+		
+		
+		
+
+		ImageIcon icon = createCardOnHand(new Card(Card.CLUBS, Card.ACE));
+		JLabel label = new JLabel();
+		label.setIcon(icon); 
+		label.setHorizontalAlignment(JLabel.CENTER);
+		myCardsPanel.add(label);
+		
+		
+		
+		icon = createTrumfCard(null);
+		label = new JLabel();
+		label.setIcon(icon); 
+		trumfPanel.add(new JLabel("Trumf"));
+		trumfPanel.add(label);
+				
+		
+		
+		this.remove(labelWait);
 		revalidate();
 	}
 	private void createUpperLayout() {
@@ -460,6 +487,9 @@ public class GUI extends JFrame{
 			return path;
 		}
 		switch (card.getValue()) {
+		case Card.TRANSPARENT_SMALL:
+			path = "transparent_small.png";
+			return path;
 		case Card.JACK:
 			path+="jack_of_";
 			break;
@@ -637,12 +667,13 @@ public class GUI extends JFrame{
 	public void createIconsForCardsOnHand() {
 		Collections.sort(currentHand);
 
-		ImageIcon icon = createCardOnHand(null);
-		JLabel label = new JLabel();
+		ImageIcon icon;
+		JLabel label;
+	/*
 		label.setIcon(icon); 
 		label.setHorizontalAlignment(JLabel.CENTER);
 		myCardsPanel.add(label);
-
+*/
 
 		for(Card card:currentHand) {
 			icon = createCardOnHand(card);
