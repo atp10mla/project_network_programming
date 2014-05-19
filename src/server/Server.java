@@ -10,7 +10,7 @@ public class Server {
 	
 	
 	public static void main(String[]args) {
-		int numberOfPlayers = 3;
+		int numberOfPlayers = 2;
 		Monitor monitor = new Monitor(numberOfPlayers);
 		
 		ServerSocket server = null;

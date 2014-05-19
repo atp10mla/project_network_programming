@@ -48,6 +48,7 @@ public class Monitor {
 	/**
 	 * New round (new cards)
 	 */
+	boolean firstRound = true;
 	public synchronized void startNewRound() {
 		for(Player p : party) {
 			p.setWantedSticks(-1);
@@ -61,10 +62,14 @@ public class Monitor {
 		sendCommando(Protocol.SET_TRUMF);
 		notifyAll();
 		
-		fixWantedSticks();
+		if(!firstRound) {
+			roundStarter = getPlayerWithId(getNextPlayer(roundStarter,party.size()));
+		} else {
+			firstRound = false;
+		}
 		
-		roundStarter = getPlayerWithId(getNextPlayer(roundStarter,party.size()));
 		stickStarter = roundStarter;
+		fixWantedSticks();
 		int start = roundStarter.getId();
 		int stop = (roundStarter.getId()==1?party.size():roundStarter.getId()-1);
 		System.out.println("start is " + start);
@@ -77,7 +82,7 @@ public class Monitor {
 		}
 		
 		commands.get(stickStarter).add(Protocol.YOUR_TURN);
-				
+		
 		//set roundstart for next round.
 		notifyAll();
 	}
@@ -91,7 +96,6 @@ public class Monitor {
 	 */
 	public synchronized void fixWantedSticks() {
 		int curr = roundStarter.getId();
-		// fix where to stop
 		int stop;
 		if(curr == 1) {
 			stop = party.size();

@@ -14,7 +14,7 @@ public class Player {
 		this.os = os;
 		this.name = name;
 		this.id = id;
-		score = 0;
+		score = 5;
 		wantedSticks = -1;
 	}
 	
@@ -30,9 +30,6 @@ public class Player {
 		sticks++;
 		if(sticks == wantedSticks) {
 			score = wantedSticks+10;
-			if(score == 10) {
-				score = 5;
-			}
 		} else {
 			score = 0;
 		}
