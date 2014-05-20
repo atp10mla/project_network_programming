@@ -14,8 +14,6 @@ public class TimerThread extends Thread{
 		this.label = label;
 		this.gui = gui;
 	}
-	
-	
 
 	public void run() {
 		long tick = 0;
@@ -30,26 +28,22 @@ public class TimerThread extends Thread{
 			try {
 				sleep(1000-(System.currentTimeMillis()-(startTime+tick)));
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				
 			}
 		}
 		if(gui != null && !kill) {
 			gui.makeAutoChoice(action);
 		}
-		
-		
 	}
 	public void kill() {
 		kill = true;
 	}
-	
+
 	public void setActionOnFinish(int action) {
 		this.action = action;
 	}
-	
+
 	public void setTextBefore(String text) {
 		textBefore = text;
 	}
-	
+
 }

@@ -77,6 +77,7 @@ public class OutputHandler extends Thread {
 				writeCommandAndData(monitor.getWinner());
 				break;
 			case Protocol.PLAYER_LEFT:
+//				System.out.println(p.getId()+" send: leftgame");
 				writeCommandAndData(Protocol.PLAYER_LEFT);
 				return;
 			}

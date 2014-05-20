@@ -303,8 +303,6 @@ public class GUI extends JFrame {
 		upper.setSize(100, 50);
 		upper.setLayout(new BorderLayout());
 
-		//upper.setLayout(new BoxLayout(upper,BoxLayout.Y_AXIS));
-
 		JPanel sticks = new JPanel();
 		sendSticks = new JButton("Send sticks");
 		sendSticks.addActionListener(new ActionListener() {
@@ -385,8 +383,6 @@ public class GUI extends JFrame {
 		
 		panelTakenSticks.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(5, 5, 5, 5),BorderFactory.createLineBorder(Color.BLACK,0,false)));
 		
-		//upper.add(sticks,BorderLayout.NORTH);
-		//upper.add(textMessage,BorderLayout.SOUTH);
 		textMessage.setHorizontalAlignment(SwingConstants.CENTER);
 		textMessage.setBackground(backgroundGreen);
 		textMessage.setFont(new Font(textMessage.getFont().getFontName(),Font.PLAIN,20));
@@ -401,7 +397,6 @@ public class GUI extends JFrame {
 		upperText.setBackground(backgroundGreen);
 		upper.add(upperText,BorderLayout.NORTH);
 		
-//		upper.add(panelTakenSticks,BorderLayout.EAST);
 		getContentPane().add(upper,BorderLayout.NORTH);
 
 	}
@@ -544,7 +539,6 @@ public class GUI extends JFrame {
 		nextCardThread.setTextBefore(textMessage.getText());
 		nextCardThread.setActionOnFinish(ACTION_CHOOSE_CARD);
 		nextCardThread.start();
-		// start timer here and put text.
 		revalidate();
 
 	}
@@ -644,51 +638,19 @@ public class GUI extends JFrame {
 				}
 			}
 			
-			
 			for (int i = 0;i<currentHand.size();i++) {
 				Card card = currentHand.get(i);
 				if (nbrOfPlayedCards == nbrOfPlayers
 						|| card.getSuit() == firstCardsSuit) {
-					System.out.println("send to monitor");
-					textMessage.setText("Waiting for other players...");
-					monitor.setChosenCard(card);
-					monitor.addSendCardCommand();
-					currentHand.remove(card);
-					// How to fix?!
-					// myCards.remove(comp);
-					myCardsPanel.remove(componentsCurrentHand.remove(i));
-					myCardsPanel.revalidate();
-					repaint();
-					revalidate();
+					removeCard(card,i);
 					return;
-	
 				} else {
-	
 					if (hasSuit) {
 						continue;
 					} else if (hasTrumf && card.getSuit() != trumf.getSuit()) {
 						continue;
 					} else {
-						System.out.println("send to monitor");
-						textMessage.setText("Waiting for other players...");
-						revalidate();
-						monitor.setChosenCard(card);
-						monitor.addSendCardCommand();
-	
-						currentHand.remove(card);
-						// FIX this..
-						// myCards.remove(comp);
-	
-						currentHand.remove(card);
-						myCardsPanel.remove(componentsCurrentHand.remove(i));
-				
-						myCardsPanel.revalidate();
-						repaint();
-						// send card and delete from view...
-						
-						
-						
-						revalidate();
+						removeCard(card,i);
 						return;
 						// send card and delete from view...
 	
@@ -697,6 +659,18 @@ public class GUI extends JFrame {
 			}
 		}
 	}
+	private void removeCard(Card card, int index) {
+		System.out.println("send to monitor");
+		textMessage.setText("Waiting for other players...");
+		monitor.setChosenCard(card);
+		monitor.addSendCardCommand();
+		currentHand.remove(card);
+		myCardsPanel.remove(componentsCurrentHand.remove(index));
+		myCardsPanel.revalidate();
+		repaint();
+		revalidate();
+	}
+	
 	private class CardListener implements MouseListener {
 		Card card;
 		Component comp;
@@ -708,8 +682,6 @@ public class GUI extends JFrame {
 	
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub   protect with monitor...
-			// TODO
 			// Check if ok to send card.
 			if (chooseCard) {
 				boolean lastCard = nbrOfPlayedCards == nbrOfPlayers;
@@ -747,17 +719,14 @@ public class GUI extends JFrame {
 					textMessage.setText("Waiting for other players...");
 					monitor.setChosenCard(card);
 					monitor.addSendCardCommand();
-	
 				}
 			};
 			t.start();
 			currentHand.remove(card);
 			componentsCurrentHand.remove(comp);
 			myCardsPanel.remove(comp);
-	
 			myCardsPanel.revalidate();
 			repaint();
-			// send card and delete from view...
 			chooseCard = false;
 		}
 		
@@ -772,7 +741,6 @@ public class GUI extends JFrame {
 	}
 	public void endGame() {
 		JOptionPane.showMessageDialog(this, "Another player left the game. The game is over...");
-		
 		System.exit(0);
 	}
 }

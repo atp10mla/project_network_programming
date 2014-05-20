@@ -20,6 +20,7 @@ public class Monitor {
 	private int numberOfRounds;
 	private int currentRound;
 	private int globalSticks;
+	private boolean playerLeft = false;
 	private Player stickWinner;
 	private int maxNbrOfPlayers;
 	private boolean gameIsRunning = false;
@@ -239,11 +240,6 @@ public class Monitor {
 	public synchronized void removePlayer(Player p) {
 		party.remove(p);
 	}
-
-	// public synchronized void setTrumf(Card suit) {
-	// trumf = suit;
-	// addCommandForAll(Protocol.SET_TRUMF);
-	// }
 	public Card getTrumf() {
 		return trumf;
 	}
@@ -344,6 +340,7 @@ public class Monitor {
 		return id;
 	}
 	public synchronized void addPlayerLeft() {
+		playerLeft = true;
 		addCommandForAll(Protocol.PLAYER_LEFT);
 		notifyAll();
 	}

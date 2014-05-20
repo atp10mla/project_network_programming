@@ -95,8 +95,6 @@ public class Card implements Comparable<Card>{
 			}
 			
 		}
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

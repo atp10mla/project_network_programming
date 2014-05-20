@@ -40,8 +40,5 @@ public class Protocol {
 	//player left the game
 	public static final int PLAYER_LEFT = 12; // followed by player id
 		
-	
 	public static final String ERROR_TIME_OUT = "Time to connect ended\n";
-	
-		
 }

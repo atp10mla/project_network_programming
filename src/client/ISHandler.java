@@ -19,13 +19,13 @@ public class ISHandler extends Thread{
 				int cmd = is.read();
 				switch(cmd) {
 				case Protocol.NEW_GAME:
-					System.out.println("GET NEW GAME");
+		//			System.out.println("GET NEW GAME");
 					int id = is.read();
 					int nbrOfPlayers = is.read();
 					gui.newGame(id, nbrOfPlayers,is.read());
 					break;				
 				case Protocol.NEW_ROUND:
-					System.out.println("GET NEW ROUND");
+		//			System.out.println("GET NEW ROUND");
 					int nbrOfCards = is.read();
 					gui.cleanHand();
 					for(int i = 0;i < nbrOfCards;i++) {
@@ -37,33 +37,33 @@ public class ISHandler extends Thread{
 					gui.createIconsForCardsOnHand();
 					break;
 				case Protocol.SET_TRUMF:				
-					System.out.println("GET SET TRUMF");
+		//			System.out.println("GET SET TRUMF");
 					gui.setTrumf(new Card(is.read(),is.read()));
 					break;
 				case Protocol.SET_STICKS:
-					System.out.println("GET SET STICKS");
+		//			System.out.println("GET SET STICKS");
 					gui.setSticks();		
 					break;
 				case Protocol.YOUR_TURN:
-					System.out.println("GET YOUR TURN");
+		//			System.out.println("GET YOUR TURN");
 					gui.chooseNextCard();
 					break;
 				case Protocol.PLAYED_CARD:
-					System.out.println("GET PLAYED CARD");
+		//			System.out.println("GET PLAYED CARD");
 					int player = is.read();
 					Card card = new Card(is.read(),is.read());
 					gui.addNextPlayedCard(card, player);
 					break;
 				case Protocol.STICK_WINNER:
-					System.out.println("GET STICK WINNER");
+		//			System.out.println("GET STICK WINNER");
 					gui.addStick(is.read());
 					break;
 				case Protocol.SET_WANTED_STICKS:
-					System.out.println("GET SET WANTED STICKS");
+		//			System.out.println("GET SET WANTED STICKS");
 					gui.setWantedSticks(is.read(),is.read());
 					break;
 				case Protocol.ROUND_SCORE:
-					System.out.println("GET ROUND SCORE");
+		//			System.out.println("GET ROUND SCORE");
 					nbrOfPlayers = is.read();
 					for(int i = 1;i<=nbrOfPlayers;i++) {
 						int roundScore = is.read();
@@ -73,12 +73,12 @@ public class ISHandler extends Thread{
 					}
 					break;
 				case Protocol.SET_WINNER:
-					System.out.println("GET SET WINNER");
+		//			System.out.println("GET SET WINNER");
 					int winner = is.read();
 					gui.setWinner(winner);
 					break;
 				case Protocol.PLAYER_LEFT:
-					System.out.println("PLAYER LEFT THE GAME");
+		//			System.out.println("PLAYER LEFT THE GAME");
 					gui.endGame();
 					return;
 				

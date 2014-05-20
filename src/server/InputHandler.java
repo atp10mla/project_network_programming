@@ -16,17 +16,15 @@ public class InputHandler extends Thread {
 		this.monitor = monitor;
 		this.p = p;
 	}
-	
+
 	public void run() {
 		while(true) {
 			int com = readOneCommand(is);
 			System.out.println("Read : " + com + " from player " + p.getId());
-			
 			switch (com) {
 			case Protocol.SEND_CARD: { // 1
 				int suit = readOneCommand(is);
 				int value = readOneCommand(is);
-				System.out.println("Read card: suit = " + suit + " value = " + value);
 				monitor.sendPlayedCard(new Card(suit, value, p));
 				break;
 			}
@@ -46,16 +44,13 @@ public class InputHandler extends Thread {
 					is.close();
 					System.exit(1);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 			}
-			
 		}
-		
 	}
-	
+
 	private int readOneCommand(InputStream is) {
 		try {
 			return is.read();
@@ -64,5 +59,4 @@ public class InputHandler extends Thread {
 			return Protocol.PLAYER_LEFT;
 		}
 	}
-
 }

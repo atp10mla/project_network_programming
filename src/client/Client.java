@@ -33,8 +33,6 @@ public class Client {
 		Monitor monitor = new Monitor();
 		GUI gui = new GUI(monitor);
 
-		//gui.setDefaultCloseOperation(gui.DO_NOTHING_ON_CLOSE);
-	 
 		Socket socket = null; 
 		try {
 			socket = new Socket(server, port);
