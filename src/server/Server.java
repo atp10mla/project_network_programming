@@ -9,8 +9,8 @@ import protocol.Protocol;
 public class Server {
 	
 	public static void main(String[]args) {
-		int numberOfPlayers = 3;
-		int numberOfRounds = 5;
+		int numberOfPlayers = 2;
+		int numberOfRounds = 10;
 		int port = 5000;
 		if(args.length == 3) {
 			try {

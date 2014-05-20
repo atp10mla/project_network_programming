@@ -6,7 +6,7 @@ public class Player {
 	private OutputStream os;
 	private String name;
 	private int id;
-	private int roundScore;
+	private int roundScore;  
 	private int totalScore;
 	private int sticks;
 	private int wantedSticks;

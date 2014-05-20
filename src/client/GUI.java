@@ -234,6 +234,7 @@ public class GUI extends JFrame {
 		}
 		roundNbr++;
 		currentHand.clear();
+		componentsCurrentHand.clear();
 		myCardsPanel.removeAll();
 
 		ImageIcon icon = createCardOnHand(null);
@@ -751,6 +752,7 @@ public class GUI extends JFrame {
 			};
 			t.start();
 			currentHand.remove(card);
+			componentsCurrentHand.remove(comp);
 			myCardsPanel.remove(comp);
 	
 			myCardsPanel.revalidate();
