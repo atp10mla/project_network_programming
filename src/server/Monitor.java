@@ -80,8 +80,6 @@ public class Monitor {
 		int start = roundStarter.getId();
 		int stop = (roundStarter.getId() == 1 ? party.size() : roundStarter
 				.getId() - 1);
-		// System.out.println("start is " + start);
-		// System.out.println("stop is " + stop);
 
 		int curr = start;
 		while (curr != stop) {
@@ -144,8 +142,6 @@ public class Monitor {
 	// main function, really
 	public synchronized void sendPlayedCard(Card card) {
 		for (Player p : party) {
-			// if(p.equals(card.getOwner()))
-			// continue;
 			playedCards.get(p).add(card);
 		}
 		addCommandForAll(Protocol.PLAYED_CARD);
