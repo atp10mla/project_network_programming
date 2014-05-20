@@ -47,6 +47,7 @@ public class GUI extends JFrame {
 	
 	// Current cards on hand
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
+	private ArrayList<Component> componentsCurrentHand = new ArrayList<Component>();
 
 	private int nbrOfPlayers;
 	
@@ -62,7 +63,7 @@ public class GUI extends JFrame {
 	private int sticksInRound; 
 	
 	// Time a player has to make a move, seconds
-	private final int WAIT_TIME = 60;
+	private final int WAIT_TIME = 5;
 	private final int CONNECTION_TIME = 5*1000*2;
 
 	// JPanels
@@ -591,6 +592,7 @@ public class GUI extends JFrame {
 			icon = createCardOnHand(card);
 			label = new JLabel();
 			label.setIcon(icon);
+			componentsCurrentHand.add(label);
 			label.addMouseListener(new CardListener(card, label));
 			label.setHorizontalAlignment(JLabel.CENTER);
 
@@ -612,6 +614,7 @@ public class GUI extends JFrame {
 	public void makeAutoChoice(int action) {
 		switch (action) {
 		case ACTION_SET_STICKS:
+			setSticks = false;
 			int sticks = (int) spinner.getValue();
 			if (nbrOfPlayersThatSetSticks == nbrOfPlayers - 1
 					&& sticks + totalSticks == sticksInRound) {
@@ -621,15 +624,28 @@ public class GUI extends JFrame {
 					sticks--;
 				}
 			}
-			setSticks = false;
 			System.out.println("count: " + spinner.getValue());
-			monitor.addNumberOfSticksCommand((int) spinner.getValue());
+			monitor.addNumberOfSticksCommand(sticks);
 			textMessage.setText("Waiting for other players...");
 			revalidate();
 			break;
 		case ACTION_CHOOSE_CARD:
 			chooseCard = false;
-			for (Card card : currentHand) {
+			boolean hasTrumf = false;
+			boolean hasSuit = false;
+
+			for (Card card2 : currentHand) {
+				if (card2.getSuit() == trumf.getSuit()) {
+					hasTrumf = true;
+				}
+				if (card2.getSuit() == firstCardsSuit) {
+					hasSuit = true;
+				}
+			}
+			
+			
+			for (int i = 0;i<currentHand.size();i++) {
+				Card card = currentHand.get(i);
 				if (nbrOfPlayedCards == nbrOfPlayers
 						|| card.getSuit() == firstCardsSuit) {
 					System.out.println("send to monitor");
@@ -639,23 +655,14 @@ public class GUI extends JFrame {
 					currentHand.remove(card);
 					// How to fix?!
 					// myCards.remove(comp);
-	
+					myCardsPanel.remove(componentsCurrentHand.remove(i));
 					myCardsPanel.revalidate();
 					repaint();
+					revalidate();
+					return;
 	
 				} else {
 	
-					boolean hasTrumf = false;
-					boolean hasSuit = false;
-	
-					for (Card card2 : currentHand) {
-						if (card2.getSuit() == trumf.getSuit()) {
-							hasTrumf = true;
-						}
-						if (card2.getSuit() == firstCardsSuit) {
-							hasSuit = true;
-						}
-					}
 					if (hasSuit) {
 						continue;
 					} else if (hasTrumf && card.getSuit() != trumf.getSuit()) {
@@ -671,7 +678,17 @@ public class GUI extends JFrame {
 						// FIX this..
 						// myCards.remove(comp);
 	
+						currentHand.remove(card);
+						myCardsPanel.remove(componentsCurrentHand.remove(i));
+				
+						myCardsPanel.revalidate();
+						repaint();
+						// send card and delete from view...
+						
+						
+						
 						revalidate();
+						return;
 						// send card and delete from view...
 	
 					}
@@ -690,7 +707,8 @@ public class GUI extends JFrame {
 	
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
+			// TODO Auto-generated method stub   protect with monitor...
+			// TODO
 			// Check if ok to send card.
 			if (chooseCard) {
 				boolean lastCard = nbrOfPlayedCards == nbrOfPlayers;
