@@ -20,7 +20,6 @@ public class Monitor {
 	private int numberOfRounds;
 	private int currentRound;
 	private int globalSticks;
-	private boolean playerLeft = false;
 	private Player stickWinner;
 	private int maxNbrOfPlayers;
 	private boolean gameIsRunning = false;
@@ -299,7 +298,6 @@ public class Monitor {
 
 	private Player currentStickSetter;
 
-	// TODO
 	public synchronized void setWantedSticks(int nbrOfSticks, Player p) {
 		p.setWantedSticks(nbrOfSticks);
 		currentStickSetter = p;
@@ -336,7 +334,6 @@ public class Monitor {
 		return id;
 	}
 	public synchronized void addPlayerLeft() {
-		playerLeft = true;
 		addCommandForAll(Protocol.PLAYER_LEFT);
 		notifyAll();
 	}
