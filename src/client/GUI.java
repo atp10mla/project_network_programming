@@ -63,7 +63,7 @@ public class GUI extends JFrame {
 	
 	// Time a player has to make a move, seconds
 	private final int WAIT_TIME = 60;
-	private final int CONNECTION_TIME = 60*1000*2;
+	private final int CONNECTION_TIME = 5*1000*2;
 
 	// JPanels
 	private JPanel myCardsPanel;

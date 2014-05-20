@@ -1,14 +1,16 @@
 package server;
 
 public class StartGun extends Thread {
-	Monitor monitor;
+	private Monitor monitor;
+	private int timeToWait;
 	
-	public StartGun(Monitor m) {
-		monitor = m;
+	public StartGun(Monitor m, int timeToWait) {
+		this.monitor = m;
+		this.timeToWait = timeToWait;
 	}
 		
 	public void run() {
-		monitor.waitForStart();
+		monitor.waitForStart(timeToWait);
 		monitor.startGame();
 		monitor.startNewRound();
 		while(true) {

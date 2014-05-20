@@ -9,7 +9,7 @@ import protocol.Protocol;
 public class Server {
 	
 	public static void main(String[]args) {
-		int numberOfPlayers = 2;
+		int numberOfPlayers = 3;
 		int numberOfRounds = 5;
 		int port = 5000;
 		if(args.length == 3) {
@@ -40,7 +40,7 @@ public class Server {
 		Monitor monitor = new Monitor(numberOfPlayers, numberOfRounds);
 		
 		ServerSocket server = null;
-		final long TIME_TO_CONNECT = 1000*2*60; // 2min
+		final int TIME_TO_CONNECT = 1000*2*5; // 2min
 		int currPlayer = 1;
 		try {
 			System.out.println("Server starting...");
@@ -57,10 +57,14 @@ public class Server {
 			Socket socket = null;
 			try {
 				socket = server.accept();
+				if (monitor.isGameStarted()) {
+					socket.close();
+					break;
+				}
 				System.out.println(socket.getInetAddress().getHostName() + " connected.");
 				if(firstTime) {
 					timeFirstPlayerConnected = System.currentTimeMillis();
-					new StartGun(monitor).start();
+					new StartGun(monitor, TIME_TO_CONNECT).start();
 					firstTime = false;
 				}
 			} catch (IOException e) {

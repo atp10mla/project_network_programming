@@ -128,12 +128,12 @@ public class Monitor {
 	/**
 	 * Used by startGun to start the game.
 	 */
-	public synchronized void waitForStart() {
+	public synchronized void waitForStart(int time) {
 		long startTime = System.currentTimeMillis();
 		while (party.size() < maxNbrOfPlayers
-				&& (System.currentTimeMillis() - startTime) < (1000 * 2 * 60)) {
+				&& (System.currentTimeMillis() - startTime) < (time)) {
 			try {
-				wait(1000 * 2 * 60);
+				wait(time);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -346,5 +346,9 @@ public class Monitor {
 	public synchronized void addPlayerLeft() {
 		addCommandForAll(Protocol.PLAYER_LEFT);
 		notifyAll();
+	}
+	
+	public synchronized boolean isGameStarted() {
+		return gameIsRunning;
 	}
 }
