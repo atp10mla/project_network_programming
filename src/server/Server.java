@@ -40,7 +40,7 @@ public class Server {
 		Monitor monitor = new Monitor(numberOfPlayers, numberOfRounds);
 		
 		ServerSocket server = null;
-		final int TIME_TO_CONNECT = 1000*2*5; // 2min
+		final int TIME_TO_CONNECT = 1000*2*60; // 2min
 		int currPlayer = 1;
 		try {
 			System.out.println("Server starting...");
