@@ -10,7 +10,7 @@ public class Server {
 	
 	public static void main(String[]args) {
 		int numberOfPlayers = 2;
-		int numberOfRounds = 2;
+		int numberOfRounds = 5;
 		int port = 5000;
 		if(args.length == 3) {
 			try {

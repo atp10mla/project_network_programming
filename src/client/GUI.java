@@ -40,12 +40,10 @@ public class GUI extends JFrame {
 
 	private Color backgroundGreen = new Color(14,171,9);
 	private Color lightBlue = new Color(218,242,245);
-	private JLabel labelWait;
-
 
 	private JLabel waitingForPlayersLabel;
 	// Message element (wait for next player, set sticks...)
-	private JLabel textMessage = new JLabel("Wait for other players");
+	private JLabel textMessage = new JLabel("Waiting for other players... ");
 	
 	// Current cards on hand
 	private ArrayList<Card> currentHand = new ArrayList<Card>();
@@ -111,7 +109,7 @@ public class GUI extends JFrame {
 		setSize(800, 600); // default size is 0,0
 		setLayout(new BorderLayout());
 		this.monitor = monitor;
-		waitingForPlayersLabel = new JLabel("Waiting for players... ");
+		waitingForPlayersLabel = new JLabel("Waiting for other players... ");
 
 		waitingForPlayersLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		waitingForPlayersLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -261,8 +259,8 @@ public class GUI extends JFrame {
 		this.sticksInRound = numberOfRounds + 1;
 
 		this.nbrOfPlayers = nbrOfPlayers;
-		createScoreBoard(id);
 		createUpperLayout();
+		createScoreBoard(id);
 		trumfPanel = new JPanel();
 		trumfPanel.setLayout(new BoxLayout(trumfPanel, BoxLayout.Y_AXIS));
 		trumfPanel.setBackground(backgroundGreen);
@@ -328,7 +326,7 @@ public class GUI extends JFrame {
 							System.out.println("count: " + spinner.getValue());
 							monitor.addNumberOfSticksCommand((int) spinner
 									.getValue());
-							textMessage.setText("Wait for other players...");
+							textMessage.setText("Waitinng for other players...");
 							revalidate();
 						}
 					};
@@ -401,21 +399,21 @@ public class GUI extends JFrame {
 		upperText.setBackground(backgroundGreen);
 		upper.add(upperText,BorderLayout.NORTH);
 		
-		upper.add(panelTakenSticks,BorderLayout.EAST);
+//		upper.add(panelTakenSticks,BorderLayout.EAST);
 		getContentPane().add(upper,BorderLayout.NORTH);
 
 	}
 
 	private void createScoreBoard(int id) {
 		JPanel panelScoreBoard = new JPanel();
-		panelScoreBoard.setLayout(new GridLayout(numberOfRounds*2+3,nbrOfPlayers+1));
+		panelScoreBoard.setLayout(new GridLayout(numberOfRounds*2+4,nbrOfPlayers+1));
 
 		panelScoreBoard.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(0, 0, 0, 0),BorderFactory.createLineBorder(Color.BLACK,5,false)));
 		panelScoreBoard.setBackground(lightBlue);
 
 
-		scoreBoard =  new JLabel[numberOfRounds*2+3][nbrOfPlayers+1];
-		for(int i = 0;i<numberOfRounds*2+3;i++) {
+		scoreBoard =  new JLabel[numberOfRounds*2+4][nbrOfPlayers+1];
+		for(int i = 0;i<scoreBoard.length;i++) {
 			for(int j=0;j<=nbrOfPlayers;j++){
 				if(j==0) {
 					if(i>1 && i< numberOfRounds*2+2) {
@@ -425,7 +423,9 @@ public class GUI extends JFrame {
 							scoreBoard[i][j] = new JLabel("  "+(i-numberOfRounds-1));	
 						}
 					} else if(i == numberOfRounds*2+2) {
-						scoreBoard[i][j] = new JLabel("Tot score: ");
+						scoreBoard[i][j] = new JLabel("Score:");
+					} else if(i == numberOfRounds*2+3) {
+						scoreBoard[i][j] = new JLabel("Sticks:");
 
 					} else {
 						scoreBoard[i][j] = new JLabel("");
@@ -445,9 +445,10 @@ public class GUI extends JFrame {
 							scoreBoard[i][j] = new JLabel("" + j);
 						}
 					} else if(i==numberOfRounds*2+2) {
-
 						scoreBoard[i][j] = new JLabel("0");
-
+					} else if(i == numberOfRounds*2+3) {
+						scoreBoard[i][j] = new JLabel("0");
+						takenSticks[j-1] = scoreBoard[i][j];
 					} else {
 						scoreBoard[i][j] = new JLabel("");
 					}
