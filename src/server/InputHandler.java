@@ -37,12 +37,19 @@ public class InputHandler extends Thread {
 			}
 			case Protocol.PLAYER_LEFT:
 				monitor.addPlayerLeft();
-				System.exit(0);
+				try {
+					is.close();
+					return;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return;
 			default: {
 				System.out.println(" -- unexpected input");
 				try {
+					monitor.addPlayerLeft();
 					is.close();
-					System.exit(1);
+					return;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
