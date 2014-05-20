@@ -52,7 +52,8 @@ public class Server {
 		
 		boolean firstTime = true;
 		long timeFirstPlayerConnected = 0;
-		while(!server.isClosed()) {
+		int connectedPlayers = 0;
+		while(connectedPlayers < numberOfPlayers && !server.isClosed()) {
 			Socket socket = null;
 			try {
 				socket = server.accept();
@@ -73,6 +74,7 @@ public class Server {
 					
 					new InputHandler(socket.getInputStream(), monitor, p).start();
 					new OutputHandler(socket.getOutputStream(), monitor, p).start();
+					connectedPlayers++;
 				} catch (IOException e) {
 					System.out.println("Error when client connecting");
 					System.exit(1);
@@ -81,7 +83,11 @@ public class Server {
 				System.out.println(Protocol.ERROR_TIME_OUT);
 				break;
 			}
-
+		}
+		try {
+			server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

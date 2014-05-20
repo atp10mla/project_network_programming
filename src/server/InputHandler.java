@@ -42,6 +42,13 @@ public class InputHandler extends Thread {
 				System.exit(0);
 			default: {
 				System.out.println(" -- unexpected input");
+				try {
+					is.close();
+					System.exit(1);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			}
 			

@@ -64,7 +64,7 @@ public class GUI extends JFrame {
 	private int sticksInRound; 
 	
 	// Time a player has to make a move, seconds
-	private final int WAIT_TIME = 5;
+	private final int WAIT_TIME = 60;
 	private final int CONNECTION_TIME = 60*1000*2;
 
 	// JPanels
