@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -101,6 +102,9 @@ public class GUI extends JFrame {
 	private static final int ACTION_SET_STICKS = 0;
 	private static final int ACTION_CHOOSE_CARD = 1;
 
+	URLClassLoader urlLoader=(URLClassLoader)this.getClass().getClassLoader();
+
+	
 	/**
 	 * 
 	 * @param monitor
@@ -521,7 +525,10 @@ public class GUI extends JFrame {
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	private ImageIcon createImageIcon(String path, int width, int height) {
-		ImageIcon imgIcon = new ImageIcon("Resources/" + path);
+		
+		//ImageIcon imgIcon = new ImageIcon("Resources/" + path);
+		ImageIcon imgIcon = new ImageIcon(urlLoader.findResource(path));
+		
 		Image img = imgIcon.getImage();
 		img = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
 		return new ImageIcon(img);
